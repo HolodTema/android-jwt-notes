@@ -3,6 +3,7 @@ package com.terabyte.data.repository
 import com.terabyte.data.storage.remote.NetworkStorage
 import com.terabyte.data.storage.remote.model.LoginRequestJson
 import com.terabyte.data.storage.remote.model.LoginResponseJson
+import com.terabyte.data.storage.remote.model.RegisterRequestJson
 import com.terabyte.domain.model.LoginCredentialsModel
 import com.terabyte.domain.model.RegisterCredentialsModel
 import com.terabyte.domain.model.TokenModel
@@ -25,7 +26,12 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun register(registerCredentialsModel: RegisterCredentialsModel): Result<TokenModel> {
-        return Result.failure(Exception())
+        val registerRequestJson = mapToRegisterRequestJson(registerCredentialsModel)
+
+        val result = networkStorage.register(registerRequestJson)
+        return result.map {
+            mapToTokenModel(it)
+        }
     }
 
     override suspend fun logout() {
@@ -42,6 +48,14 @@ class AuthRepositoryImpl @Inject constructor(
     private fun mapToTokenModel(loginResponseJson: LoginResponseJson): TokenModel {
         return TokenModel(
             token = loginResponseJson.token
+        )
+    }
+
+    private fun mapToRegisterRequestJson(registerCredentialsModel: RegisterCredentialsModel): RegisterRequestJson {
+        return RegisterRequestJson(
+            username = registerCredentialsModel.username,
+            email = registerCredentialsModel.email,
+            password = registerCredentialsModel.password
         )
     }
 }

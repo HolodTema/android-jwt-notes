@@ -2,6 +2,8 @@ package com.terabyte.data.storage.remote
 
 import com.terabyte.data.storage.remote.model.LoginRequestJson
 import com.terabyte.data.storage.remote.model.LoginResponseJson
+import com.terabyte.data.storage.remote.model.RegisterRequestJson
+import com.terabyte.domain.model.RegistrationError
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,7 +26,23 @@ class NetworkStorageImpl @Inject constructor(
         }
     }
 
-    override suspend fun register() {
-        TODO("Not yet implemented")
+    override suspend fun register(registerRequestJson: RegisterRequestJson): Result<LoginResponseJson> {
+        val response = retrofitService.register(registerRequestJson)
+        return if (response.isSuccessful) {
+            val body = response.body()
+            if (body == null) {
+                Result.failure(RegistrationError.UnknownError())
+            } else {
+                Result.success(body)
+            }
+        }
+        else {
+            if (response.code() == 409) {
+                Result.failure(RegistrationError.UsernameBusy())
+            }
+            else {
+                Result.failure(RegistrationError.UnknownError())
+            }
+        }
     }
 }
