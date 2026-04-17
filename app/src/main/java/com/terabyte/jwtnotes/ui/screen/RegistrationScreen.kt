@@ -92,19 +92,19 @@ fun RegistrationScreen(
                     onValueChange = {
                         viewModel.updateUsername(it)
                     },
-                    label = {
-                        if (state.isErrorUsernameValidation) {
-                            Text(
-                                text = stringResource(R.string.invalid_username_format),
-                                color = Color.Red
-                            )
-                        }
-                    },
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = 8.dp)
                 )
             }
+
+            Text(
+                text = stringResource(R.string.invalid_username_format),
+                color = Color.Red,
+                fontSize = 14.sp,
+                modifier = Modifier
+                    .visible(state.isErrorUsernameValidation)
+            )
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -173,14 +173,25 @@ fun RegistrationScreen(
             }
 
             Text(
+                text = stringResource(R.string.invalid_password_format),
+                color = Color.Red,
+                fontSize = 14.sp,
+                modifier = Modifier
+                    .visible(state.isErrorUsernameValidation)
+            )
+
+
+            Text(
                 text = if (state.isErrorUsernameBusy) {
                     stringResource(R.string.error_username_busy)
                 } else {
                     stringResource(R.string.error_unable_to_register)
                 },
                 color = Color.Red,
+                fontSize = 14.sp,
                 modifier = Modifier
                     .visible(state.isErrorUnableToRegister || state.isErrorUsernameBusy)
+                    .padding(top = 8.dp)
             )
 
 

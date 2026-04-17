@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.terabyte.domain.model.RegisterCredentialsModel
 import com.terabyte.domain.model.RegistrationError
 import com.terabyte.domain.usecase.RegisterUseCase
+import com.terabyte.domain.usecase.ValidatePasswordUseCase
 import com.terabyte.domain.usecase.ValidateUsernameUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class RegistrationViewModel @Inject constructor(
     private val registerUseCase: RegisterUseCase,
-    private val validateUsernameUseCase: ValidateUsernameUseCase
+    private val validateUsernameUseCase: ValidateUsernameUseCase,
+    private val validatePasswordUseCase: ValidatePasswordUseCase,
 ) : ViewModel() {
 
     private val _stateFlowRegisterScreenState = MutableStateFlow<RegistrationScreenState>(
@@ -59,11 +61,23 @@ class RegistrationViewModel @Inject constructor(
     }
 
     fun register() {
-        val isUsernameValid = validateUsernameUseCase(stateFlowRegisterScreenState.value.username)
+        val username = stateFlowRegisterScreenState.value.username.trim()
+        val isUsernameValid = validateUsernameUseCase(username)
         if (!isUsernameValid) {
             _stateFlowRegisterScreenState.update {
                 it.copy(
                     isErrorUsernameValidation = true
+                )
+            }
+            return
+        }
+
+        val password = stateFlowRegisterScreenState.value.password.trim()
+        val isPasswordValid = validatePasswordUseCase(password)
+        if (!isPasswordValid) {
+            _stateFlowRegisterScreenState.update {
+                it.copy(
+                    isErrorPasswordValidation = true
                 )
             }
             return
@@ -74,12 +88,13 @@ class RegistrationViewModel @Inject constructor(
                 isLoading = true,
                 isErrorUnableToRegister = false,
                 isErrorUsernameBusy = false,
-                isErrorUsernameValidation = false
+                isErrorUsernameValidation = false,
+                isErrorPasswordValidation = false,
             )
         }
 
         val registerCredentialsModel = RegisterCredentialsModel(
-            username = stateFlowRegisterScreenState.value.username.trim(),
+            username = username,
             email = stateFlowRegisterScreenState.value.email.trim(),
             password = stateFlowRegisterScreenState.value.password.trim(),
         )
@@ -133,5 +148,6 @@ data class RegistrationScreenState(
     val isErrorUsernameBusy: Boolean = false,
     val isErrorUnableToRegister: Boolean = false,
     val isErrorUsernameValidation: Boolean = false,
+    val isErrorPasswordValidation: Boolean = false,
     val isLoading: Boolean = false
 )
