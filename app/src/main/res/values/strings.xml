@@ -7,4 +7,5 @@
     <string name="error_username_busy">Registration error: this username is busy</string>
     <string name="error_unable_to_register">Registration error: check Internet connection</string>
     <string name="register">Create new user</string>
+    <string name="invalid_username_format">Username must contain only English symbols or digits</string>
 </resources>

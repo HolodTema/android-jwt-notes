@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.terabyte.domain.model.RegisterCredentialsModel
 import com.terabyte.domain.model.RegistrationError
 import com.terabyte.domain.usecase.RegisterUseCase
+import com.terabyte.domain.usecase.ValidateUsernameUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegistrationViewModel @Inject constructor(
-    private val registerUseCase: RegisterUseCase
+    private val registerUseCase: RegisterUseCase,
+    private val validateUsernameUseCase: ValidateUsernameUseCase
 ) : ViewModel() {
 
     private val _stateFlowRegisterScreenState = MutableStateFlow<RegistrationScreenState>(
@@ -57,11 +59,22 @@ class RegistrationViewModel @Inject constructor(
     }
 
     fun register() {
+        val isUsernameValid = validateUsernameUseCase(stateFlowRegisterScreenState.value.username)
+        if (!isUsernameValid) {
+            _stateFlowRegisterScreenState.update {
+                it.copy(
+                    isErrorUsernameValidation = true
+                )
+            }
+            return
+        }
+
         _stateFlowRegisterScreenState.update {
             it.copy(
                 isLoading = true,
                 isErrorUnableToRegister = false,
-                isErrorUsernameBusy = false
+                isErrorUsernameBusy = false,
+                isErrorUsernameValidation = false
             )
         }
 
@@ -90,7 +103,7 @@ class RegistrationViewModel @Inject constructor(
                                 it.copy(
                                     isLoading = false,
                                     isErrorUnableToRegister = false,
-                                    isErrorUsernameBusy = true
+                                    isErrorUsernameBusy = true,
                                 )
                             }
                         }
@@ -99,7 +112,7 @@ class RegistrationViewModel @Inject constructor(
                                 it.copy(
                                     isLoading = false,
                                     isErrorUnableToRegister = true,
-                                    isErrorUsernameBusy = false
+                                    isErrorUsernameBusy = false,
                                 )
                             }
                         }
@@ -119,5 +132,6 @@ data class RegistrationScreenState(
     val registrationSuccess: Boolean = false,
     val isErrorUsernameBusy: Boolean = false,
     val isErrorUnableToRegister: Boolean = false,
+    val isErrorUsernameValidation: Boolean = false,
     val isLoading: Boolean = false
 )

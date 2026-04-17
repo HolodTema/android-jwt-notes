@@ -92,6 +92,14 @@ fun RegistrationScreen(
                     onValueChange = {
                         viewModel.updateUsername(it)
                     },
+                    label = {
+                        if (state.isErrorUsernameValidation) {
+                            Text(
+                                text = stringResource(R.string.invalid_username_format),
+                                color = Color.Red
+                            )
+                        }
+                    },
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = 8.dp)
