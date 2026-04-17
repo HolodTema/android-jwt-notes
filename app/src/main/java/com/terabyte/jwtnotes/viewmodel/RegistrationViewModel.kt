@@ -1,0 +1,107 @@
+package com.terabyte.jwtnotes.viewmodel
+
+import android.R.attr.password
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.terabyte.domain.model.LoginCredentialsModel
+import com.terabyte.domain.model.RegisterCredentialsModel
+import com.terabyte.domain.usecase.RegisterUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
+
+@HiltViewModel
+class RegistrationViewModel @Inject constructor(
+    private val registerUseCase: RegisterUseCase
+) : ViewModel() {
+
+    private val _stateFlowRegisterScreenState = MutableStateFlow<RegistrationScreenState>(
+        RegistrationScreenState()
+    )
+    val stateFlowRegisterScreenState = _stateFlowRegisterScreenState.asStateFlow()
+
+    fun updatePasswordVisibility() {
+        _stateFlowRegisterScreenState.update {
+            it.copy(
+                isPasswordVisible = !(it.isPasswordVisible)
+            )
+        }
+    }
+
+    fun updateUsername(username: String) {
+        _stateFlowRegisterScreenState.update {
+            it.copy(
+                username = username
+            )
+        }
+    }
+
+    fun updateEmail(email: String) {
+        _stateFlowRegisterScreenState.update {
+            it.copy(
+                email = email
+            )
+        }
+    }
+
+    fun updatePassword(password: String) {
+        _stateFlowRegisterScreenState.update {
+            it.copy(
+                password = password
+            )
+        }
+    }
+
+    fun register() {
+        _stateFlowRegisterScreenState.update {
+            it.copy(
+                isLoading = true,
+                isErrorUnableToRegister = false,
+                isErrorUsernameBusy = false
+            )
+        }
+
+        val registerCredentialsModel = RegisterCredentialsModel(
+            username = stateFlowRegisterScreenState.value.username.trim(),
+            email = stateFlowRegisterScreenState.value.email.trim(),
+            password = stateFlowRegisterScreenState.value.password.trim(),
+        )
+        viewModelScope.launch(Dispatchers.IO) {
+            val isLoginSuccess = registerUseCase(loginCredentialsModel)
+            withContext(Dispatchers.Main) {
+                if (isLoginSuccess) {
+                    _stateFlowLoginScreenState.update {
+                        it.copy(
+                            isLoading = false,
+                            loginSuccess = true
+                        )
+                    }
+                } else {
+                    _stateFlowLoginScreenState.update {
+                        it.copy(
+                            isLoading = false,
+                            isLoginError = true
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+data class RegistrationScreenState(
+    val username: String = "",
+    val email: String = "",
+    val password: String = "",
+    val isPasswordVisible: Boolean = false,
+    val registrationSuccess: Boolean = false,
+    val isErrorUsernameBusy: Boolean = false,
+    val isErrorUnableToRegister: Boolean = false,
+    val isLoading: Boolean = false
+)
