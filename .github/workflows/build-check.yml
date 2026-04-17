@@ -1,0 +1,41 @@
+# this script is workflow
+name: Build Check
+
+# events when our workflow starts
+on:
+  pull_request:
+    branches: [ "main" ]
+  push:
+    branches: [ "main" ]  
+
+jobs:
+  build:
+    #launch this job on github-runner - github server
+    runs-on: ubuntu-latest
+    
+    steps:
+      # uses - means we launch step from Github Marketplace
+      # this step means pull repository code to workflow
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      # step from Github Marketplace
+      # Setting up JDK-17
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      
+      # there is greadlew file in our project to build project
+      # we need to make it executable
+      # run - means we launch a terminal command
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+      
+      - name: Build project
+        run: ./gradlew build
+      
+      - name: Build successful
+        if: success()
+        run: echo "Build successful!"
