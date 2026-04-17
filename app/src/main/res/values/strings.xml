@@ -9,4 +9,5 @@
     <string name="register">Create new user</string>
     <string name="invalid_username_format">Username must contain symbols a-z, A-Z, 0-9</string>
     <string name="invalid_password_format">Password must be at least 8 characters and contain symbols a-z, A-Z, 0-9</string>
+    <string name="invalid_email_format">Email format is invalid</string>
 </resources>

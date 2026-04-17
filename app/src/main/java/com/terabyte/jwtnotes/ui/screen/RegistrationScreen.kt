@@ -129,6 +129,14 @@ fun RegistrationScreen(
                 )
             }
 
+            Text(
+                text = stringResource(R.string.invalid_email_format),
+                color = Color.Red,
+                fontSize = 14.sp,
+                modifier = Modifier
+                    .visible(state.isErrorEmailValidation)
+            )
+
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
@@ -177,7 +185,7 @@ fun RegistrationScreen(
                 color = Color.Red,
                 fontSize = 14.sp,
                 modifier = Modifier
-                    .visible(state.isErrorUsernameValidation)
+                    .visible(state.isErrorPasswordValidation)
             )
 
 

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.terabyte.domain.model.RegisterCredentialsModel
 import com.terabyte.domain.model.RegistrationError
 import com.terabyte.domain.usecase.RegisterUseCase
+import com.terabyte.domain.usecase.ValidateEmailUseCase
 import com.terabyte.domain.usecase.ValidatePasswordUseCase
 import com.terabyte.domain.usecase.ValidateUsernameUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,6 +21,7 @@ import javax.inject.Inject
 class RegistrationViewModel @Inject constructor(
     private val registerUseCase: RegisterUseCase,
     private val validateUsernameUseCase: ValidateUsernameUseCase,
+    private val validateEmailUseCase: ValidateEmailUseCase,
     private val validatePasswordUseCase: ValidatePasswordUseCase,
 ) : ViewModel() {
 
@@ -63,21 +65,19 @@ class RegistrationViewModel @Inject constructor(
     fun register() {
         val username = stateFlowRegisterScreenState.value.username.trim()
         val isUsernameValid = validateUsernameUseCase(username)
-        if (!isUsernameValid) {
-            _stateFlowRegisterScreenState.update {
-                it.copy(
-                    isErrorUsernameValidation = true
-                )
-            }
-            return
-        }
+
+        val email = stateFlowRegisterScreenState.value.email.trim()
+        val isEmailValid = validateEmailUseCase(email)
 
         val password = stateFlowRegisterScreenState.value.password.trim()
         val isPasswordValid = validatePasswordUseCase(password)
-        if (!isPasswordValid) {
+
+        if (!(isPasswordValid && isUsernameValid && isEmailValid)) {
             _stateFlowRegisterScreenState.update {
                 it.copy(
-                    isErrorPasswordValidation = true
+                    isErrorUsernameValidation = !isUsernameValid,
+                    isErrorEmailValidation = !isEmailValid,
+                    isErrorPasswordValidation = !isPasswordValid
                 )
             }
             return
@@ -89,14 +89,15 @@ class RegistrationViewModel @Inject constructor(
                 isErrorUnableToRegister = false,
                 isErrorUsernameBusy = false,
                 isErrorUsernameValidation = false,
+                isErrorEmailValidation = false,
                 isErrorPasswordValidation = false,
             )
         }
 
         val registerCredentialsModel = RegisterCredentialsModel(
             username = username,
-            email = stateFlowRegisterScreenState.value.email.trim(),
-            password = stateFlowRegisterScreenState.value.password.trim(),
+            email = email,
+            password = password
         )
         viewModelScope.launch(Dispatchers.IO) {
             val registrationError = registerUseCase(registerCredentialsModel)
@@ -148,6 +149,7 @@ data class RegistrationScreenState(
     val isErrorUsernameBusy: Boolean = false,
     val isErrorUnableToRegister: Boolean = false,
     val isErrorUsernameValidation: Boolean = false,
+    val isErrorEmailValidation: Boolean = false,
     val isErrorPasswordValidation: Boolean = false,
     val isLoading: Boolean = false
 )
