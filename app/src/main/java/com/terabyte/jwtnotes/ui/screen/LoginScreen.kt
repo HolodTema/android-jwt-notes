@@ -1,6 +1,7 @@
 package com.terabyte.jwtnotes.ui.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,7 +39,8 @@ import com.terabyte.jwtnotes.viewmodel.LoginViewModel
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
-    onLoginSuccess: () -> Unit
+    onLoginSuccess: () -> Unit,
+    onNavigateToRegistration: () -> Unit
 ) {
     val state by viewModel.stateFlowLoginScreenState.collectAsStateWithLifecycle()
 
@@ -152,6 +154,9 @@ fun LoginScreen(
                 color = Color.Blue,
                 modifier = Modifier
                     .padding(top = 32.dp)
+                    .clickable {
+                        onNavigateToRegistration()
+                    }
             )
 
         }
@@ -164,7 +169,10 @@ fun LoginScreen(
 @Preview(showBackground = true, showSystemUi = true)
 fun LoginScreenPreview() {
     JwtNotesTheme {
-        LoginScreen() {}
+        LoginScreen(
+            onLoginSuccess = {},
+            onNavigateToRegistration = {}
+        )
     }
 }
 

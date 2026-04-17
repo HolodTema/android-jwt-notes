@@ -39,9 +39,14 @@ class MainActivity : ComponentActivity() {
                     ) {
 
                         composable(Route.LoginRoute.route) {
-                            LoginScreen() {
-                                navController.navigate(Route.ListNotesRoute.route)
-                            }
+                            LoginScreen(
+                                onLoginSuccess = {
+                                    navController.navigate(Route.ListNotesRoute.route)
+                                },
+                                onNavigateToRegistration = {
+                                    navController.navigate(Route.RegistrationRoute.route)
+                                }
+                            )
                         }
 
                         composable(Route.RegistrationRoute.route) {
