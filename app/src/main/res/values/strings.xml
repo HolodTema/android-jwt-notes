@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">JwtNotes</string>
+    <string name="login">Log in</string>
+    <string name="or_create_new_account">Or create new account</string>
+    <string name="login_error">Invalid username or password. Try again</string>
 </resources>
