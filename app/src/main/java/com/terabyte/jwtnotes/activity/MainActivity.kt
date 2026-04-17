@@ -4,6 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -25,32 +29,36 @@ class MainActivity : ComponentActivity() {
         setContent {
             JwtNotesTheme {
                 val navController = rememberNavController()
+                Scaffold { paddingValues ->
+                    NavHost(
+                        navController = navController,
+                        startDestination = Route.LoginRoute.route,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                    ) {
 
-                NavHost(
-                    navController = navController,
-                    startDestination = Route.LoginRoute.route
-                ) {
-
-                    composable(Route.LoginRoute.route) {
-                        LoginScreen() {
-                            navController.navigate(Route.ListNotesRoute.route)
+                        composable(Route.LoginRoute.route) {
+                            LoginScreen() {
+                                navController.navigate(Route.ListNotesRoute.route)
+                            }
                         }
-                    }
 
-                    composable(Route.RegistrationRoute.route) {
-                        RegistrationScreen()
-                    }
+                        composable(Route.RegistrationRoute.route) {
+                            RegistrationScreen()
+                        }
 
-                    composable(Route.ListNotesRoute.route) {
-                        ListNotesScreen()
-                    }
+                        composable(Route.ListNotesRoute.route) {
+                            ListNotesScreen()
+                        }
 
-                    composable(Route.CreateNoteRoute.route) {
-                        CreateNoteScreen()
-                    }
+                        composable(Route.CreateNoteRoute.route) {
+                            CreateNoteScreen()
+                        }
 
-                    composable(Route.UpdateNoteRoute.route) {
-                        UpdateNoteScreen()
+                        composable(Route.UpdateNoteRoute.route) {
+                            UpdateNoteScreen()
+                        }
                     }
                 }
             }

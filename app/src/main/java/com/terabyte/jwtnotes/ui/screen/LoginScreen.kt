@@ -22,6 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -79,10 +81,10 @@ fun LoginScreen(
                     color = Color.Black
                 )
                 OutlinedTextField(
-                    value = "",
+                    value = state.username,
                     singleLine = true,
                     onValueChange = {
-
+                        viewModel.updateUsername(it)
                     },
                     modifier = Modifier
                         .weight(1f)
@@ -102,10 +104,15 @@ fun LoginScreen(
                     color = Color.Black
                 )
                 OutlinedTextField(
-                    value = "",
+                    value = state.password,
                     singleLine = true,
                     onValueChange = {
-
+                        viewModel.updatePassword(it)
+                    },
+                    visualTransformation = if (state.isPasswordVisible) {
+                        VisualTransformation.None
+                    } else {
+                        PasswordVisualTransformation()
                     },
                     modifier = Modifier
                         .weight(1f)
@@ -113,11 +120,15 @@ fun LoginScreen(
                 )
                 IconButton(
                     onClick = {
-
+                        viewModel.updatePasswordVisibility()
                     }
                 ) {
                     Icon(
-                        painterResource(R.drawable.ic_password_invisible),
+                        painter = if (state.isPasswordVisible) {
+                            painterResource(R.drawable.ic_password_visible)
+                        } else {
+                            painterResource(R.drawable.ic_password_invisible)
+                        },
                         contentDescription = null,
                         tint = Color.Black
                     )
