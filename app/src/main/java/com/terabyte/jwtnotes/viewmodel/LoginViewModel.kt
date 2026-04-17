@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -46,12 +47,37 @@ class LoginViewModel @Inject constructor(
     }
 
     fun login() {
+        _stateFlowLoginScreenState.update {
+            it.copy(
+                isLoading = true,
+                isLoginError = false
+            )
+        }
+
         val loginCredentialsModel = LoginCredentialsModel(
             username = stateFlowLoginScreenState.value.username.trim(),
             password = stateFlowLoginScreenState.value.password.trim(),
         )
         viewModelScope.launch(Dispatchers.IO) {
-            loginUseCase(loginCredentialsModel)
+            val isLoginSuccess = loginUseCase(loginCredentialsModel)
+            withContext(Dispatchers.Main) {
+                if (isLoginSuccess) {
+                    _stateFlowLoginScreenState.update {
+                        it.copy(
+                            isLoading = false,
+                            loginSuccess = true
+                        )
+                    }
+                }
+                else {
+                    _stateFlowLoginScreenState.update {
+                        it.copy(
+                            isLoading = false,
+                            isLoginError = true
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -61,6 +87,6 @@ data class LoginScreenState(
     val password: String = "",
     val isPasswordVisible: Boolean = false,
     val loginSuccess: Boolean = false,
-    val textError: String? = null,
+    val isLoginError: Boolean = false,
     val isLoading: Boolean = false
 )

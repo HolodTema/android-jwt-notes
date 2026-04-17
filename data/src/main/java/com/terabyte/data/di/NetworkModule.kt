@@ -61,7 +61,7 @@ abstract class NetworkModule {
         @Singleton
         fun provideRetrofit(client: OkHttpClient, gsonConverterFactory: GsonConverterFactory): Retrofit {
             return Retrofit.Builder()
-                .baseUrl("http://185.154.52.200/api")
+                .baseUrl("http://185.154.52.200/")
                 .client(client)
                 .addConverterFactory(gsonConverterFactory)
                 .build()

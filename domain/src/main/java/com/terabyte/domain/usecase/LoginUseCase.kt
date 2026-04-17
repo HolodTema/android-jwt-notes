@@ -9,7 +9,7 @@ class LoginUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
 
-    suspend operator fun invoke(loginCredentialsModel: LoginCredentialsModel) {
-        authRepository.login(loginCredentialsModel)
+    suspend operator fun invoke(loginCredentialsModel: LoginCredentialsModel): Boolean {
+        return authRepository.login(loginCredentialsModel).isSuccess
     }
 }
