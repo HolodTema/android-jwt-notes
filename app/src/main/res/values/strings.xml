@@ -4,4 +4,7 @@
     <string name="or_create_new_account">Or create new account</string>
     <string name="login_error">Invalid username or password. Try again</string>
     <string name="or_log_in">Already have an account? Log in</string>
+    <string name="error_username_busy">Registration error: this username is busy</string>
+    <string name="error_unable_to_register">Registration error: check Internet connection</string>
+    <string name="register">Create new user</string>
 </resources>

@@ -1,10 +1,9 @@
 package com.terabyte.jwtnotes.viewmodel
 
-import android.R.attr.password
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.terabyte.domain.model.LoginCredentialsModel
 import com.terabyte.domain.model.RegisterCredentialsModel
+import com.terabyte.domain.model.RegistrationError
 import com.terabyte.domain.usecase.RegisterUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -72,21 +71,38 @@ class RegistrationViewModel @Inject constructor(
             password = stateFlowRegisterScreenState.value.password.trim(),
         )
         viewModelScope.launch(Dispatchers.IO) {
-            val isLoginSuccess = registerUseCase(loginCredentialsModel)
+            val registrationError = registerUseCase(registerCredentialsModel)
             withContext(Dispatchers.Main) {
-                if (isLoginSuccess) {
-                    _stateFlowLoginScreenState.update {
+                if (registrationError == null) {
+                    //successful registration
+                    _stateFlowRegisterScreenState.update {
                         it.copy(
                             isLoading = false,
-                            loginSuccess = true
+                            registrationSuccess = true
                         )
                     }
-                } else {
-                    _stateFlowLoginScreenState.update {
-                        it.copy(
-                            isLoading = false,
-                            isLoginError = true
-                        )
+                }
+                else {
+                    //some error happened
+                    when (registrationError) {
+                        is RegistrationError.UsernameBusy -> {
+                            _stateFlowRegisterScreenState.update {
+                                it.copy(
+                                    isLoading = false,
+                                    isErrorUnableToRegister = false,
+                                    isErrorUsernameBusy = true
+                                )
+                            }
+                        }
+                        is RegistrationError.UnknownError -> {
+                            _stateFlowRegisterScreenState.update {
+                                it.copy(
+                                    isLoading = false,
+                                    isErrorUnableToRegister = true,
+                                    isErrorUsernameBusy = false
+                                )
+                            }
+                        }
                     }
                 }
             }

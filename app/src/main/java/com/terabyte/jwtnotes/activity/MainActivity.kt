@@ -50,7 +50,14 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable(Route.RegistrationRoute.route) {
-                            RegistrationScreen()
+                            RegistrationScreen(
+                                onRegistrationSuccess = {
+                                    navController.navigate(Route.ListNotesRoute.route)
+                                },
+                                onNavigateToLogin = {
+                                    navController.navigate(Route.LoginRoute.route)
+                                }
+                            )
                         }
 
                         composable(Route.ListNotesRoute.route) {

@@ -46,18 +46,18 @@ fun RegistrationScreen(
     onRegistrationSuccess: () -> Unit,
     onNavigateToLogin: () -> Unit
 ) {
-    val state by viewModel.stateFlowLoginScreenState.collectAsStateWithLifecycle()
+    val state by viewModel.stateFlowRegisterScreenState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(state.loginSuccess) {
-        if (state.loginSuccess) {
-            onLoginSuccess()
+    LaunchedEffect(state.registrationSuccess) {
+        if (state.registrationSuccess) {
+            onRegistrationSuccess()
         }
     }
 
     Scaffold(
         topBar = {
             Text(
-                text = "Log in to your account",
+                text = "Create new account",
                 fontSize = 22.sp,
                 color = MaterialTheme.colorScheme.onPrimary,
                 textAlign = TextAlign.Center,
@@ -91,6 +91,29 @@ fun RegistrationScreen(
                     singleLine = true,
                     onValueChange = {
                         viewModel.updateUsername(it)
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 8.dp)
+                )
+            }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
+            ) {
+                Text(
+                    text = "Email:",
+                    fontSize = 16.sp,
+                    color = Color.Black
+                )
+                OutlinedTextField(
+                    value = state.email,
+                    singleLine = true,
+                    onValueChange = {
+                        viewModel.updateEmail(it)
                     },
                     modifier = Modifier
                         .weight(1f)
@@ -142,10 +165,14 @@ fun RegistrationScreen(
             }
 
             Text(
-                text = stringResource(R.string.login_error),
+                text = if (state.isErrorUsernameBusy) {
+                    stringResource(R.string.error_username_busy)
+                } else {
+                    stringResource(R.string.error_unable_to_register)
+                },
                 color = Color.Red,
                 modifier = Modifier
-                    .visible(state.isLoginError)
+                    .visible(state.isErrorUnableToRegister || state.isErrorUsernameBusy)
             )
 
 
@@ -160,11 +187,11 @@ fun RegistrationScreen(
                 } else {
                     Button(
                         onClick = {
-                            viewModel.login()
+                            viewModel.register()
                         }
                     ) {
                         Text(
-                            text = stringResource(R.string.login)
+                            text = stringResource(R.string.register)
                         )
                     }
                 }
