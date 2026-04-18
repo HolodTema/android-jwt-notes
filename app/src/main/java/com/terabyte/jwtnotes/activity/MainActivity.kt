@@ -61,7 +61,14 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable(Route.ListNotesRoute.route) {
-                            ListNotesScreen()
+                            ListNotesScreen(
+                                onTokenExpired = {
+
+                                },
+                                onLogout = {
+
+                                }
+                            )
                         }
 
                         composable(Route.CreateNoteRoute.route) {

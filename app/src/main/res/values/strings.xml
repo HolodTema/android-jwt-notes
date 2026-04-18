@@ -10,4 +10,7 @@
     <string name="invalid_username_format">Username must contain symbols a-z, A-Z, 0-9</string>
     <string name="invalid_password_format">Password must be at least 8 characters and contain symbols a-z, A-Z, 0-9</string>
     <string name="invalid_email_format">Email format is invalid</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="check_internet_connection">Check Internet connection</string>
+    <string name="try_again">Try again</string>
 </resources>
