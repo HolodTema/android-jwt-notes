@@ -2,8 +2,11 @@ package com.terabyte.data.storage.remote
 
 import com.terabyte.data.storage.remote.model.LoginRequestJson
 import com.terabyte.data.storage.remote.model.LoginResponseJson
+import com.terabyte.data.storage.remote.model.NoteJson
 import com.terabyte.data.storage.remote.model.RegisterRequestJson
+import com.terabyte.domain.model.NoteRequestError
 import com.terabyte.domain.model.RegistrationError
+import okhttp3.internal.http2.ErrorCode
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -42,6 +45,27 @@ class NetworkStorageImpl @Inject constructor(
             }
             else {
                 Result.failure(RegistrationError.UnknownError())
+            }
+        }
+    }
+
+    override suspend fun getAllNotes(): Result<List<NoteJson>> {
+        val response = retrofitService.getAllNotes()
+        return if (response.isSuccessful) {
+            val body = response.body()
+            if (body == null) {
+                Result.failure(NoteRequestError.UnknownError())
+            }
+            else {
+                Result.success(body)
+            }
+        }
+        else {
+            if (response.code() == 401) {
+                Result.failure(NoteRequestError.TokenExpiredError())
+            }
+            else {
+                Result.failure(NoteRequestError.UnknownError())
             }
         }
     }
