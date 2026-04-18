@@ -4,6 +4,7 @@ import com.terabyte.data.storage.remote.model.LoginRequestJson
 import com.terabyte.data.storage.remote.model.LoginResponseJson
 import com.terabyte.data.storage.remote.model.NoteJson
 import com.terabyte.data.storage.remote.model.RegisterRequestJson
+import com.terabyte.data.storage.remote.model.UserDetailsJson
 
 interface NetworkStorage {
 
@@ -12,5 +13,7 @@ interface NetworkStorage {
     suspend fun register(registerRequestJson: RegisterRequestJson): Result<LoginResponseJson>
 
     suspend fun getAllNotes(): Result<List<NoteJson>>
+
+    suspend fun getUserDetails(): Result<UserDetailsJson>
 
 }
