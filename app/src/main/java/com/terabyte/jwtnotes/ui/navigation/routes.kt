@@ -11,4 +11,6 @@ sealed class Route(val route: String) {
     data object RegistrationRoute : Route("registration")
 
     data object ListNotesRoute : Route("listNotes")
+
+    data object TokenExpiredRoute : Route("tokenExpired")
 }

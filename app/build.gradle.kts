@@ -44,6 +44,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.constraintlayout.compose)
 
     coreLibraryDesugaring(libs.android.tools.desugar)
 

@@ -13,4 +13,9 @@
     <string name="something_went_wrong">Something went wrong</string>
     <string name="check_internet_connection">Check Internet connection</string>
     <string name="try_again">Try again</string>
+    <string name="log_out">Log out</string>
+    <string name="amount_notes">Amount notes: %d</string>
+    <string name="session_time_over">Time of this session is over</string>
+    <string name="you_need_to_log_in_again">You need to log in again.</string>
+    <string name="log_in_again">Log in again</string>
 </resources>
