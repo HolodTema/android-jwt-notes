@@ -3,6 +3,7 @@ package com.terabyte.data.di
 import com.terabyte.data.storage.remote.NetworkStorage
 import com.terabyte.data.storage.remote.NetworkStorageImpl
 import com.terabyte.data.storage.remote.RetrofitService
+import com.terabyte.data.storage.remote.TokenHttpInterceptor
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -41,9 +42,13 @@ abstract class NetworkModule {
         @JvmStatic
         @Provides
         @Singleton
-        fun provideOkHttpClient(interceptor: HttpLoggingInterceptor): OkHttpClient {
+        fun provideOkHttpClient(
+            tokenHttpInterceptor: TokenHttpInterceptor,
+            httpLoggingInterceptor: HttpLoggingInterceptor
+        ): OkHttpClient {
             return OkHttpClient.Builder()
-                .addInterceptor(interceptor)
+                .addInterceptor(tokenHttpInterceptor)
+                .addInterceptor(httpLoggingInterceptor)
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)
                 .build()

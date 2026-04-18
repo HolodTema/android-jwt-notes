@@ -1,7 +1,9 @@
 package com.terabyte.data.di
 
 import com.terabyte.data.repository.AuthRepositoryImpl
+import com.terabyte.data.repository.TokenRepositoryImpl
 import com.terabyte.domain.repository.AuthRepository
+import com.terabyte.domain.repository.TokenRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -16,5 +18,9 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindAuthRepository(authRepository: AuthRepositoryImpl): AuthRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindTokenRepository(tokenRepository: TokenRepositoryImpl): TokenRepository
 
 }
