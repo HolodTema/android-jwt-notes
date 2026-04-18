@@ -22,7 +22,7 @@ class UserRepositoryImpl @Inject constructor(
     private fun mapToUserDetailsModel(userDetailsJson: UserDetailsJson): UserDetailsModel {
         return UserDetailsModel(
             username = userDetailsJson.username,
-            email = userDetailsJson.username
+            email = userDetailsJson.email
         )
     }
 

@@ -29,9 +29,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.terabyte.domain.model.NoteModel
+import com.terabyte.domain.model.UserDetailsModel
 import com.terabyte.jwtnotes.R
 import com.terabyte.jwtnotes.ui.theme.JwtNotesTheme
 import com.terabyte.jwtnotes.viewmodel.ListNotesScreenState
@@ -60,7 +62,7 @@ fun ListNotesScreen(
 
             is ListNotesScreenState.ErrorNoInternet -> {
                 ScreenStateErrorNoInternet {
-                    viewModel.getAllNotes()
+                    viewModel.getAllNotesAndUserDetails()
                 }
             }
 
@@ -70,6 +72,7 @@ fun ListNotesScreen(
 
             is ListNotesScreenState.Success -> {
                 ScreenStateSuccess(
+                    userDetailsModel = (state as ListNotesScreenState.Success).userDetailsModel,
                     notes = (state as ListNotesScreenState.Success).notes,
                     onLogout = onLogout,
                     onUpdateNote = onUpdateNote,
@@ -122,6 +125,7 @@ private fun ScreenStateErrorNoInternet(
 
 @Composable
 private fun ScreenStateSuccess(
+    userDetailsModel: UserDetailsModel,
     notes: List<NoteModel>,
     onLogout: () -> Unit,
     onUpdateNote: (NoteModel) -> Unit,
@@ -133,15 +137,40 @@ private fun ScreenStateSuccess(
             .padding(16.dp)
     ) {
         val buttonLogout = createRef()
+        val columnUserDetails = createRef()
         val textAmountNotes = createRef()
         val lazyColumnNotes = createRef()
         val buttonAddNote = createRef()
+
+
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.Start,
+            modifier = Modifier
+                .constrainAs(columnUserDetails) {
+                    top.linkTo(parent.top)
+                    start.linkTo(parent.start)
+                    end.linkTo(buttonLogout.start)
+
+                    width = Dimension.fillToConstraints
+                }
+        ) {
+            Text(
+                text = userDetailsModel.username,
+                fontSize = 20.sp
+            )
+            Text(
+                text = userDetailsModel.email,
+                fontSize = 14.sp
+            )
+        }
 
         Button(
             onClick = onLogout,
             modifier = Modifier
                 .constrainAs(buttonLogout) {
-                    top.linkTo(parent.top)
+                    top.linkTo(columnUserDetails.top)
+                    bottom.linkTo(columnUserDetails.bottom)
                     end.linkTo(parent.end)
                 }
         ) {
@@ -154,10 +183,11 @@ private fun ScreenStateSuccess(
             textAlign = TextAlign.Start,
             modifier = Modifier
                 .constrainAs(textAmountNotes) {
-                    top.linkTo(buttonLogout.top)
-                    bottom.linkTo(buttonLogout.bottom)
+                    top.linkTo(buttonLogout.bottom)
                     start.linkTo(parent.start)
                     end.linkTo(buttonLogout.start)
+
+                    width = Dimension.fillToConstraints
                 }
         )
 
@@ -165,7 +195,7 @@ private fun ScreenStateSuccess(
             modifier = Modifier
                 .fillMaxWidth()
                 .constrainAs(lazyColumnNotes) {
-                    top.linkTo(buttonLogout.bottom)
+                    top.linkTo(textAmountNotes.bottom)
                     bottom.linkTo(parent.bottom)
                 }
         ) {
@@ -294,8 +324,14 @@ fun ScreenStateSuccessPreview() {
         )
     )
 
+    val userDetailsModel = UserDetailsModel(
+        username = "Ivan",
+        email = "ivan228@gmail.com"
+    )
+
     JwtNotesTheme {
         ScreenStateSuccess(
+            userDetailsModel = userDetailsModel,
             notes = notes,
             onLogout = {
 

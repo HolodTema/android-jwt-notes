@@ -4,9 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.terabyte.domain.model.NoteModel
 import com.terabyte.domain.model.NoteRequestError
+import com.terabyte.domain.model.UserDetailsModel
+import com.terabyte.domain.model.UserDetailsRequestError
 import com.terabyte.domain.usecase.GetAllNotesUseCase
+import com.terabyte.domain.usecase.GetUserDetailsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -16,6 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ListNotesViewModel @Inject constructor(
+    private val getUserDetailsUseCase: GetUserDetailsUseCase,
     private val getAllNotesUseCase: GetAllNotesUseCase
 ) : ViewModel() {
 
@@ -26,32 +31,44 @@ class ListNotesViewModel @Inject constructor(
 
 
     init {
-        getAllNotes()
+        getAllNotesAndUserDetails()
     }
 
 
-    fun getAllNotes() {
+    fun getAllNotesAndUserDetails() {
         _stateFlowListNotesScreenState.value = ListNotesScreenState.Loading
 
         viewModelScope.launch(Dispatchers.IO) {
-            val result = getAllNotesUseCase()
+            val deferredNotes = async {
+                getAllNotesUseCase()
+            }
+            val deferredUserDetails = async {
+                getUserDetailsUseCase()
+            }
+
+            val resultNotes = deferredNotes.await()
+            val resultUserDetails = deferredUserDetails.await()
 
             withContext(Dispatchers.Main) {
-                result.onFailure { throwable ->
-                    when (throwable) {
-                        is NoteRequestError.TokenExpiredError -> {
-                            _stateFlowListNotesScreenState.value =
-                                ListNotesScreenState.ErrorTokenExpired
-                        }
-
-                        is NoteRequestError.UnknownError -> {
-                            _stateFlowListNotesScreenState.value =
-                                ListNotesScreenState.ErrorNoInternet
-                        }
+                when {
+                    (resultNotes.exceptionOrNull() is NoteRequestError.TokenExpiredError ||
+                            resultUserDetails.exceptionOrNull() is UserDetailsRequestError.TokenExpiredError) -> {
+                        _stateFlowListNotesScreenState.value =
+                            ListNotesScreenState.ErrorTokenExpired
                     }
-                }
-                result.onSuccess {
-                    _stateFlowListNotesScreenState.value = ListNotesScreenState.Success(it)
+
+                    (resultNotes.isFailure || resultUserDetails.isFailure) -> {
+                        _stateFlowListNotesScreenState.value =
+                            ListNotesScreenState.ErrorNoInternet
+                    }
+
+                    else -> {
+                        val notes = resultNotes.getOrThrow()
+                        val userDetails = resultUserDetails.getOrThrow()
+                        _stateFlowListNotesScreenState.value =
+                            ListNotesScreenState.Success(userDetails, notes)
+
+                    }
                 }
             }
         }
@@ -67,6 +84,7 @@ sealed class ListNotesScreenState {
     data object ErrorNoInternet : ListNotesScreenState()
 
     data class Success(
+        val userDetailsModel: UserDetailsModel,
         val notes: List<NoteModel>
     ) : ListNotesScreenState()
 }
