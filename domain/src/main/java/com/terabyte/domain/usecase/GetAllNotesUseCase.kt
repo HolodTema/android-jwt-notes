@@ -9,7 +9,12 @@ class GetAllNotesUseCase @Inject constructor(
 ) {
 
     suspend operator fun invoke(): Result<List<NoteModel>> {
-        return noteRepository.getAllNotes()
+        return noteRepository.getAllNotes().map { notes ->
+            notes.sortedWith { note1, note2 ->
+                // obj2.compareTo(obj1) to get descending sort
+                note2.updatedAt.compareTo(note1.updatedAt)
+            }
+        }
     }
 
 }
