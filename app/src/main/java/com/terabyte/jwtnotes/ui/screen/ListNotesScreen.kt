@@ -1,5 +1,6 @@
 package com.terabyte.jwtnotes.ui.screen
 
+import android.util.Log.i
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -206,13 +207,21 @@ private fun ScreenStateSuccess(
                     height = Dimension.fillToConstraints
                 }
         ) {
-            items(notes) { noteModel ->
+            // without keys Jetpack Compose cannot understand how to discern list elements
+            // so, in case of scrolling all the visible items can be recomposed - visual
+            // bugs in scrolling state
+            // that is why I added keys to elements
+            items(
+                items = notes,
+                key = { note ->
+                    note.id
+                }
+            ) { noteModel ->
                 NoteCard(noteModel) {
                     onUpdateNote(noteModel)
                 }
                 Spacer(
                     modifier = Modifier
-                        .fillMaxWidth()
                         .height(16.dp)
                 )
             }
