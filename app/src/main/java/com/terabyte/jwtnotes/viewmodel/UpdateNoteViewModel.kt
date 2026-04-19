@@ -11,7 +11,9 @@ import com.terabyte.domain.usecase.GetNoteByIdUseCase
 import com.terabyte.domain.usecase.UpdateNoteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -32,6 +34,9 @@ class UpdateNoteViewModel @Inject constructor(
     )
     val stateFlowUpdateNoteScreenState = _stateFlowUpdateNoteScreenState.asStateFlow()
 
+    private val _sharedFlowSnackbarEvent = MutableSharedFlow<UpdateNoteSnackbarEvent>()
+    val sharedFlowSnackbarEvent = _sharedFlowSnackbarEvent.asSharedFlow()
+
     init {
         val noteId: Int = savedStateHandle["noteId"] ?: error("noteId not provided")
         loadNote(noteId)
@@ -51,8 +56,7 @@ class UpdateNoteViewModel @Inject constructor(
                         _stateFlowUpdateNoteScreenState.value =
                             UpdateNoteScreenState.ErrorTokenExpired
                     } else {
-                        _stateFlowUpdateNoteScreenState.value =
-                            UpdateNoteScreenState.ErrorNoInternet
+                        _sharedFlowSnackbarEvent.emit(UpdateNoteSnackbarEvent.NoInternet)
                     }
                 }
             }
@@ -72,14 +76,19 @@ class UpdateNoteViewModel @Inject constructor(
                 withContext(Dispatchers.Main) {
                     when (error) {
                         is NoteRequestError.TokenExpiredError -> {
-                            _stateFlowUpdateNoteScreenState.value = UpdateNoteScreenState.ErrorTokenExpired
+                            _stateFlowUpdateNoteScreenState.value =
+                                UpdateNoteScreenState.ErrorTokenExpired
                         }
+
                         is NoteRequestError.UnknownError -> {
-                            _stateFlowUpdateNoteScreenState.value = UpdateNoteScreenState.ErrorNoInternet
+                            _sharedFlowSnackbarEvent.emit(UpdateNoteSnackbarEvent.NoInternet)
+
                         }
+
                         else -> {
                             // note was updated successfully
-                            _stateFlowUpdateNoteScreenState.value = UpdateNoteScreenState.NoteUpdated
+                            _stateFlowUpdateNoteScreenState.value =
+                                UpdateNoteScreenState.NoteUpdated
                         }
                     }
                 }
@@ -103,8 +112,7 @@ class UpdateNoteViewModel @Inject constructor(
                         }
 
                         is NoteRequestError.UnknownError -> {
-                            _stateFlowUpdateNoteScreenState.value =
-                                UpdateNoteScreenState.ErrorNoInternet
+                            _sharedFlowSnackbarEvent.emit(UpdateNoteSnackbarEvent.NoInternet)
                         }
 
                         else -> {
@@ -145,8 +153,6 @@ sealed class UpdateNoteScreenState {
 
     data object ErrorTokenExpired : UpdateNoteScreenState()
 
-    data object ErrorNoInternet : UpdateNoteScreenState()
-
     data object NoteDeleted : UpdateNoteScreenState()
 
     data object NoteUpdated : UpdateNoteScreenState()
@@ -155,5 +161,10 @@ sealed class UpdateNoteScreenState {
         val noteModel: NoteModel
     ) : UpdateNoteScreenState()
 
+}
+
+
+sealed class UpdateNoteSnackbarEvent {
+    data object NoInternet : UpdateNoteSnackbarEvent()
 }
 

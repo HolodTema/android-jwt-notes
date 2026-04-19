@@ -1,6 +1,5 @@
 package com.terabyte.jwtnotes.ui.screen
 
-import android.R.attr.duration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,7 +19,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -33,11 +31,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.terabyte.domain.model.NoteModel
 import com.terabyte.jwtnotes.R
 import com.terabyte.jwtnotes.ui.theme.JwtNotesTheme
 import com.terabyte.jwtnotes.viewmodel.UpdateNoteScreenState
+import com.terabyte.jwtnotes.viewmodel.UpdateNoteSnackbarEvent
 import com.terabyte.jwtnotes.viewmodel.UpdateNoteViewModel
 import java.time.LocalDateTime
 
@@ -52,6 +50,20 @@ fun UpdateNoteScreen(
 
     val snackbarHostState = remember {
         SnackbarHostState()
+    }
+
+    val strNoInternet = stringResource(R.string.no_internet)
+    LaunchedEffect(Unit) {
+        viewModel.sharedFlowSnackbarEvent.collect { event ->
+            when (event) {
+                is UpdateNoteSnackbarEvent.NoInternet -> {
+                    val result = snackbarHostState.showSnackbar(
+                        message = strNoInternet,
+                        duration = SnackbarDuration.Long
+                    )
+                }
+            }
+        }
     }
 
 
@@ -70,14 +82,6 @@ fun UpdateNoteScreen(
                     ScreenStateLoading()
                 }
 
-                UpdateNoteScreenState.ErrorNoInternet -> {
-                    val result = snackbarHostState.showSnackbar(
-                        message = stringResource(R.string.no_internet),
-                        actionLabel = stringResource(R.string.try_again),
-                        duration = SnackbarDuration.Long
-                    )
-                }
-
                 UpdateNoteScreenState.ErrorTokenExpired -> {
                     onTokenExpired()
                 }
@@ -88,9 +92,13 @@ fun UpdateNoteScreen(
                         noteModel = noteModel,
                         onTitleChanged = viewModel::updateNoteTitle,
                         onContentChanged = viewModel::updateNoteContent,
-                        onDeleteNoteClicked = onNoteEditingFinished,
-                        onUpdateNoteClicked = onNoteEditingFinished
+                        onDeleteNoteClicked = viewModel::deleteNote,
+                        onUpdateNoteClicked = viewModel::updateNote
                     )
+                }
+
+                is UpdateNoteScreenState.NoteUpdated, UpdateNoteScreenState.NoteDeleted -> {
+                    onNoteEditingFinished()
                 }
             }
         }
@@ -122,6 +130,7 @@ private fun ScreenStateNoteEditing(
             .padding(16.dp)
     ) {
         Row(
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
         ) {

@@ -104,7 +104,7 @@ class MainActivity : ComponentActivity() {
                                     navController.navigate(Route.CreateNoteRoute.route)
                                 },
                                 onUpdateNote = { noteModel ->
-                                    navController.navigate(Route.UpdateNoteRoute.route)
+                                    navController.navigate(Route.UpdateNoteRoute(noteModel.id).route)
                                 }
                             )
                         }
@@ -130,12 +130,30 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable(
-                            route = Route.UpdateNoteRoute.route,
+                            route = Route.UpdateNoteRoute.ROUTE_PLACEHOLDER,
                             arguments = listOf(navArgument("noteId") {
                                 type = NavType.IntType
                             })
-                        ) {
-                            UpdateNoteScreen()
+                        ) { backStackEntry ->
+                            val noteId = backStackEntry.arguments?.getInt("noteId") ?: error("noteId missing")
+
+                            UpdateNoteScreen(
+                                onTokenExpired = {
+                                    // navigate to TokenExpiredScreen and clear all the backstack
+                                    navController.navigate(Route.TokenExpiredRoute.route) {
+                                        popUpTo(Route.UpdateNoteRoute(noteId).route) {
+                                            inclusive = true
+                                        }
+                                    }
+                                },
+                                onNoteEditingFinished = {
+                                    navController.navigate(Route.ListNotesRoute.route) {
+                                        popUpTo(Route.UpdateNoteRoute(noteId).route) {
+                                            inclusive = true
+                                        }
+                                    }
+                                }
+                            )
                         }
 
                         composable(Route.TokenExpiredRoute.route) {
