@@ -108,4 +108,38 @@ class NetworkStorageImpl @Inject constructor(
             }
         }
     }
+
+    override suspend fun updateNote(
+        noteId: Int,
+        noteRequestJson: NoteRequestJson
+    ): NoteRequestError? {
+        val response = retrofitService.updateNote(noteId, noteRequestJson)
+        return if (response.isSuccessful) {
+            null
+        }
+        else {
+            if (response.code() == 401) {
+                NoteRequestError.TokenExpiredError()
+            }
+            else {
+                NoteRequestError.UnknownError()
+            }
+        }
+    }
+
+    override suspend fun deleteNote(noteId: Int): NoteRequestError? {
+        val response = retrofitService.deleteNote(noteId)
+        return if (response.isSuccessful) {
+            null
+        }
+        else {
+            if (response.code() == 401) {
+                NoteRequestError.TokenExpiredError()
+            }
+            else {
+                NoteRequestError.UnknownError()
+            }
+        }
+    }
+
 }

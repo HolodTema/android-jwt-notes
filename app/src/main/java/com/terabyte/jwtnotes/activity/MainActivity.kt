@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.terabyte.jwtnotes.ui.navigation.Route
 import com.terabyte.jwtnotes.ui.screen.CreateNoteScreen
 import com.terabyte.jwtnotes.ui.screen.ListNotesScreen
@@ -127,7 +129,12 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        composable(Route.UpdateNoteRoute.route) {
+                        composable(
+                            route = Route.UpdateNoteRoute.route,
+                            arguments = listOf(navArgument("noteId") {
+                                type = NavType.IntType
+                            })
+                        ) {
                             UpdateNoteScreen()
                         }
 

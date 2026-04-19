@@ -29,6 +29,22 @@ class NoteRepositoryImpl @Inject constructor(
         return networkStorage.createNote(noteRequestJson)
     }
 
+    override suspend fun updateNote(
+        noteId: Int,
+        title: String,
+        content: String
+    ): NoteRequestError? {
+        val noteRequestJson = NoteRequestJson(
+            title = title,
+            content = content
+        )
+        return networkStorage.updateNote(noteId, noteRequestJson)
+    }
+
+    override suspend fun deleteNote(noteId: Int): NoteRequestError? {
+        return networkStorage.deleteNote(noteId)
+    }
+
     private fun mapToNoteModel(noteJson: NoteJson): NoteModel {
         return NoteModel(
             id = noteJson.id,
