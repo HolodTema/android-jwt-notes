@@ -108,7 +108,23 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable(Route.CreateNoteRoute.route) {
-                            CreateNoteScreen()
+                            CreateNoteScreen(
+                                onTokenExpired = {
+                                    // navigate to TokenExpiredScreen and clear all the backstack
+                                    navController.navigate(Route.TokenExpiredRoute.route) {
+                                        popUpTo(Route.CreateNoteRoute.route) {
+                                            inclusive = true
+                                        }
+                                    }
+                                },
+                                onNoteCreated = {
+                                    navController.navigate(Route.ListNotesRoute.route) {
+                                        popUpTo(Route.CreateNoteRoute.route) {
+                                            inclusive = true
+                                        }
+                                    }
+                                }
+                            )
                         }
 
                         composable(Route.UpdateNoteRoute.route) {
