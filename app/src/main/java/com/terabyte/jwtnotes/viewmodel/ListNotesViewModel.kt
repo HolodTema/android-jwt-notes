@@ -8,6 +8,7 @@ import com.terabyte.domain.model.UserDetailsModel
 import com.terabyte.domain.model.UserDetailsRequestError
 import com.terabyte.domain.usecase.GetAllNotesUseCase
 import com.terabyte.domain.usecase.GetUserDetailsUseCase
+import com.terabyte.domain.usecase.LogoutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -21,7 +22,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ListNotesViewModel @Inject constructor(
     private val getUserDetailsUseCase: GetUserDetailsUseCase,
-    private val getAllNotesUseCase: GetAllNotesUseCase
+    private val getAllNotesUseCase: GetAllNotesUseCase,
+    private val logoutUseCase: LogoutUseCase
 ) : ViewModel() {
 
     private val _stateFlowListNotesScreenState = MutableStateFlow<ListNotesScreenState>(
@@ -73,6 +75,15 @@ class ListNotesViewModel @Inject constructor(
             }
         }
     }
+
+    fun logout() {
+        viewModelScope.launch(Dispatchers.IO) {
+            logoutUseCase()
+            withContext(Dispatchers.Main) {
+                _stateFlowListNotesScreenState.value = ListNotesScreenState.Logout
+            }
+        }
+    }
 }
 
 sealed class ListNotesScreenState {
@@ -87,4 +98,6 @@ sealed class ListNotesScreenState {
         val userDetailsModel: UserDetailsModel,
         val notes: List<NoteModel>
     ) : ListNotesScreenState()
+
+    data object Logout : ListNotesScreenState()
 }

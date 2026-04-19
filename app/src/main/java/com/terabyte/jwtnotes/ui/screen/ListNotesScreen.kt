@@ -74,10 +74,16 @@ fun ListNotesScreen(
                 ScreenStateSuccess(
                     userDetailsModel = (state as ListNotesScreenState.Success).userDetailsModel,
                     notes = (state as ListNotesScreenState.Success).notes,
-                    onLogout = onLogout,
+                    onLogout = {
+                        viewModel.logout()
+                    },
                     onUpdateNote = onUpdateNote,
                     onCreateNote = onCreateNote
                 )
+            }
+
+            is ListNotesScreenState.Logout -> {
+                onLogout()
             }
         }
     }

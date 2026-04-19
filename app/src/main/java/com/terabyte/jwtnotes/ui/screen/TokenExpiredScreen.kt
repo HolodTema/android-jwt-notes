@@ -13,11 +13,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.terabyte.jwtnotes.R
 import com.terabyte.jwtnotes.ui.theme.JwtNotesTheme
+import com.terabyte.jwtnotes.viewmodel.TokenExpiredViewModel
 
 @Composable
-fun TokenExpiredScreen(onLoginAgain: () -> Unit) {
+fun TokenExpiredScreen(
+    viewModel: TokenExpiredViewModel = hiltViewModel(),
+    onLoginAgain: () -> Unit
+) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -49,7 +54,7 @@ fun TokenExpiredScreen(onLoginAgain: () -> Unit) {
 @Composable
 fun TokenExpiredScreenPreview() {
     JwtNotesTheme {
-        TokenExpiredScreen {  }
+        TokenExpiredScreen { }
     }
 }
 
