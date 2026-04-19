@@ -3,6 +3,7 @@ package com.terabyte.data.storage.remote
 import com.terabyte.data.storage.remote.model.LoginRequestJson
 import com.terabyte.data.storage.remote.model.LoginResponseJson
 import com.terabyte.data.storage.remote.model.NoteJson
+import com.terabyte.data.storage.remote.model.NoteRequestJson
 import com.terabyte.data.storage.remote.model.RegisterRequestJson
 import com.terabyte.data.storage.remote.model.UserDetailsJson
 import retrofit2.Response
@@ -23,4 +24,7 @@ interface RetrofitService {
 
     @GET("api/user")
     suspend fun getUserDetails(): Response<UserDetailsJson>
+
+    @POST("api/notes")
+    suspend fun createNote(@Body noteRequestJson: NoteRequestJson): Response<NoteRequestJson>
 }

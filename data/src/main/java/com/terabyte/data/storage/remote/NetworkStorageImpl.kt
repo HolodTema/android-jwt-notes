@@ -3,6 +3,7 @@ package com.terabyte.data.storage.remote
 import com.terabyte.data.storage.remote.model.LoginRequestJson
 import com.terabyte.data.storage.remote.model.LoginResponseJson
 import com.terabyte.data.storage.remote.model.NoteJson
+import com.terabyte.data.storage.remote.model.NoteRequestJson
 import com.terabyte.data.storage.remote.model.RegisterRequestJson
 import com.terabyte.data.storage.remote.model.UserDetailsJson
 import com.terabyte.domain.model.NoteRequestError
@@ -89,6 +90,21 @@ class NetworkStorageImpl @Inject constructor(
             }
             else {
                 Result.failure(UserDetailsRequestError.UnknownError())
+            }
+        }
+    }
+
+    override suspend fun createNote(noteRequestJson: NoteRequestJson): NoteRequestError? {
+        val response = retrofitService.createNote(noteRequestJson)
+        return if (response.isSuccessful) {
+            null
+        }
+        else {
+            if (response.code() == 401) {
+                NoteRequestError.TokenExpiredError()
+            }
+            else {
+                NoteRequestError.UnknownError()
             }
         }
     }

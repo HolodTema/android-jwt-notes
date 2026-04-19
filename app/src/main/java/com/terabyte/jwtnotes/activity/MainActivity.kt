@@ -116,6 +116,13 @@ class MainActivity : ComponentActivity() {
                                             inclusive = true
                                         }
                                     }
+                                },
+                                onNoteCreated = {
+                                    navController.navigate(Route.ListNotesRoute.route) {
+                                        popUpTo(Route.CreateNoteRoute.route) {
+                                            inclusive = true
+                                        }
+                                    }
                                 }
                             )
                         }

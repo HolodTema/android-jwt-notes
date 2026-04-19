@@ -2,7 +2,9 @@ package com.terabyte.data.repository
 
 import com.terabyte.data.storage.remote.NetworkStorage
 import com.terabyte.data.storage.remote.model.NoteJson
+import com.terabyte.data.storage.remote.model.NoteRequestJson
 import com.terabyte.domain.model.NoteModel
+import com.terabyte.domain.model.NoteRequestError
 import com.terabyte.domain.repository.NoteRepository
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -20,6 +22,11 @@ class NoteRepositoryImpl @Inject constructor(
                 mapToNoteModel(noteJson)
             }
         }
+    }
+
+    override suspend fun createNote(title: String, content: String): NoteRequestError? {
+        val noteRequestJson = NoteRequestJson(title, content)
+        return networkStorage.createNote(noteRequestJson)
     }
 
     private fun mapToNoteModel(noteJson: NoteJson): NoteModel {
