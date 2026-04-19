@@ -24,4 +24,11 @@
     <string name="no_internet">No Internet</string>
     <string name="create_note">Create new note</string>
     <string name="edit_note">Edit note</string>
+
+    <string name="create_new_account">Create new account</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show password</string>
 </resources>
