@@ -46,4 +46,7 @@ interface RetrofitService {
     suspend fun deleteNote(
         @Query("id") noteId: Int,
     ): Response<ResponseBody>
+
+    @GET("api/notes/{id}")
+    suspend fun getNoteById(@Query("id") noteId: Int): Response<NoteJson>
 }

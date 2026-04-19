@@ -24,4 +24,6 @@ interface NetworkStorage {
 
     suspend fun deleteNote(noteId: Int): NoteRequestError?
 
+    suspend fun getNoteById(noteId: Int): Result<NoteJson>
+
 }

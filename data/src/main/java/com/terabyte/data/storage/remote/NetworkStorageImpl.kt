@@ -142,4 +142,24 @@ class NetworkStorageImpl @Inject constructor(
         }
     }
 
+    override suspend fun getNoteById(noteId: Int): Result<NoteJson> {
+        val response = retrofitService.getNoteById(noteId)
+        return if (response.isSuccessful) {
+            val body = response.body()
+            if (body == null) {
+                Result.failure(NoteRequestError.UnknownError())
+            }
+            else {
+                Result.success(body)
+            }
+        }
+        else {
+            if (response.code() == 401) {
+                Result.failure(NoteRequestError.TokenExpiredError())
+            }
+            else {
+                Result.failure(NoteRequestError.UnknownError())
+            }
+        }
+    }
 }
