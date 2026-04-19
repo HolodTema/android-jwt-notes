@@ -1,12 +1,12 @@
 package com.terabyte.data.repository
 
 import com.terabyte.data.storage.remote.NetworkStorage
-import com.terabyte.data.storage.remote.model.LoginRequestJson
-import com.terabyte.data.storage.remote.model.LoginResponseJson
-import com.terabyte.data.storage.remote.model.RegisterRequestJson
-import com.terabyte.domain.model.LoginCredentialsModel
-import com.terabyte.domain.model.RegisterCredentialsModel
-import com.terabyte.domain.model.TokenModel
+import com.terabyte.data.storage.remote.model.auth.LoginRequestJson
+import com.terabyte.data.storage.remote.model.auth.LoginResponseJson
+import com.terabyte.data.storage.remote.model.auth.RegisterRequestJson
+import com.terabyte.domain.model.auth.LoginCredentialsModel
+import com.terabyte.domain.model.auth.RegisterCredentialsModel
+import com.terabyte.domain.model.auth.TokenModel
 import com.terabyte.domain.repository.AuthRepository
 import javax.inject.Inject
 import javax.inject.Singleton

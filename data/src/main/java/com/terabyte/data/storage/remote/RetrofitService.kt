@@ -1,11 +1,11 @@
 package com.terabyte.data.storage.remote
 
-import com.terabyte.data.storage.remote.model.LoginRequestJson
-import com.terabyte.data.storage.remote.model.LoginResponseJson
-import com.terabyte.data.storage.remote.model.NoteJson
-import com.terabyte.data.storage.remote.model.NoteRequestJson
-import com.terabyte.data.storage.remote.model.RegisterRequestJson
-import com.terabyte.data.storage.remote.model.UserDetailsJson
+import com.terabyte.data.storage.remote.model.auth.LoginRequestJson
+import com.terabyte.data.storage.remote.model.auth.LoginResponseJson
+import com.terabyte.data.storage.remote.model.note.NoteJson
+import com.terabyte.data.storage.remote.model.note.NoteRequestJson
+import com.terabyte.data.storage.remote.model.auth.RegisterRequestJson
+import com.terabyte.data.storage.remote.model.user.UserDetailsJson
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body

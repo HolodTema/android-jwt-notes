@@ -1,4 +1,4 @@
-package com.terabyte.data.storage.remote.model
+package com.terabyte.data.storage.remote.model.user
 
 data class UserDetailsJson(
     val username: String,

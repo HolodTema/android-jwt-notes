@@ -1,21 +1,19 @@
 package com.terabyte.jwtnotes.viewmodel
 
-import androidx.compose.ui.input.key.Key.Companion.D
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.terabyte.domain.model.NoteModel
-import com.terabyte.domain.model.NoteRequestError
-import com.terabyte.domain.usecase.DeleteNoteUseCase
-import com.terabyte.domain.usecase.GetNoteByIdUseCase
-import com.terabyte.domain.usecase.UpdateNoteUseCase
+import com.terabyte.domain.model.note.NoteModel
+import com.terabyte.domain.model.error.NoteRequestError
+import com.terabyte.domain.usecase.note.DeleteNoteUseCase
+import com.terabyte.domain.usecase.note.GetNoteByIdUseCase
+import com.terabyte.domain.usecase.note.UpdateNoteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject

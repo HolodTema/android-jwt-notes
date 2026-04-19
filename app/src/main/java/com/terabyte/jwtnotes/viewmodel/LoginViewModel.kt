@@ -2,8 +2,8 @@ package com.terabyte.jwtnotes.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.terabyte.domain.model.LoginCredentialsModel
-import com.terabyte.domain.usecase.LoginUseCase
+import com.terabyte.domain.model.auth.LoginCredentialsModel
+import com.terabyte.domain.usecase.auth.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

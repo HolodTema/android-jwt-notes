@@ -2,12 +2,12 @@ package com.terabyte.jwtnotes.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.terabyte.domain.model.RegisterCredentialsModel
-import com.terabyte.domain.model.RegistrationError
-import com.terabyte.domain.usecase.RegisterUseCase
-import com.terabyte.domain.usecase.ValidateEmailUseCase
-import com.terabyte.domain.usecase.ValidatePasswordUseCase
-import com.terabyte.domain.usecase.ValidateUsernameUseCase
+import com.terabyte.domain.model.auth.RegisterCredentialsModel
+import com.terabyte.domain.model.error.RegistrationError
+import com.terabyte.domain.usecase.auth.RegisterUseCase
+import com.terabyte.domain.usecase.auth.ValidateEmailUseCase
+import com.terabyte.domain.usecase.auth.ValidatePasswordUseCase
+import com.terabyte.domain.usecase.auth.ValidateUsernameUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

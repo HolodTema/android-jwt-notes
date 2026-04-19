@@ -1,6 +1,6 @@
-package com.terabyte.domain.usecase
+package com.terabyte.domain.usecase.auth
 
-import com.terabyte.domain.model.LoginCredentialsModel
+import com.terabyte.domain.model.auth.LoginCredentialsModel
 import com.terabyte.domain.repository.AuthRepository
 import com.terabyte.domain.repository.TokenRepository
 import javax.inject.Inject

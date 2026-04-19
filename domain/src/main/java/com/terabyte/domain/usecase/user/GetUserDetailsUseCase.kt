@@ -1,6 +1,6 @@
-package com.terabyte.domain.usecase
+package com.terabyte.domain.usecase.user
 
-import com.terabyte.domain.model.UserDetailsModel
+import com.terabyte.domain.model.user.UserDetailsModel
 import com.terabyte.domain.repository.UserRepository
 import javax.inject.Inject
 
@@ -13,4 +13,3 @@ class GetUserDetailsUseCase @Inject constructor(
     }
 
 }
-

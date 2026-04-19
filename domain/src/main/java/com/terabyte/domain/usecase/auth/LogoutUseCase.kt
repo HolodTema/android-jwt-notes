@@ -1,4 +1,4 @@
-package com.terabyte.domain.usecase
+package com.terabyte.domain.usecase.auth
 
 import com.terabyte.domain.repository.TokenRepository
 import javax.inject.Inject
