@@ -1,4 +1,4 @@
-package com.terabyte.domain.model
+package com.terabyte.domain.model.note
 
 import java.time.LocalDateTime
 
@@ -10,4 +10,3 @@ data class NoteModel(
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime
 )
-

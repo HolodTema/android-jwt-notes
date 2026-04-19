@@ -1,10 +1,10 @@
 package com.terabyte.data.repository
 
 import com.terabyte.data.storage.remote.NetworkStorage
-import com.terabyte.data.storage.remote.model.NoteJson
-import com.terabyte.data.storage.remote.model.NoteRequestJson
-import com.terabyte.domain.model.NoteModel
-import com.terabyte.domain.model.NoteRequestError
+import com.terabyte.data.storage.remote.model.note.NoteJson
+import com.terabyte.data.storage.remote.model.note.NoteRequestJson
+import com.terabyte.domain.model.note.NoteModel
+import com.terabyte.domain.model.error.NoteRequestError
 import com.terabyte.domain.repository.NoteRepository
 import java.time.LocalDateTime
 import javax.inject.Inject

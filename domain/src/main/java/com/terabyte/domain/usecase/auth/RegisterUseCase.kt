@@ -1,7 +1,7 @@
-package com.terabyte.domain.usecase
+package com.terabyte.domain.usecase.auth
 
-import com.terabyte.domain.model.RegisterCredentialsModel
-import com.terabyte.domain.model.RegistrationError
+import com.terabyte.domain.model.auth.RegisterCredentialsModel
+import com.terabyte.domain.model.error.RegistrationError
 import com.terabyte.domain.repository.AuthRepository
 import com.terabyte.domain.repository.TokenRepository
 import javax.inject.Inject

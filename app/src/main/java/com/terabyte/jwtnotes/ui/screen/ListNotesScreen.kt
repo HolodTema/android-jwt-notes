@@ -33,8 +33,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.terabyte.domain.model.NoteModel
-import com.terabyte.domain.model.UserDetailsModel
+import com.terabyte.domain.model.note.NoteModel
+import com.terabyte.domain.model.user.UserDetailsModel
 import com.terabyte.jwtnotes.R
 import com.terabyte.jwtnotes.ui.theme.JwtNotesTheme
 import com.terabyte.jwtnotes.viewmodel.ListNotesScreenState

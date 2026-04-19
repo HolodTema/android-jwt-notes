@@ -1,6 +1,6 @@
-package com.terabyte.domain.usecase
+package com.terabyte.domain.usecase.note
 
-import com.terabyte.domain.model.NoteRequestError
+import com.terabyte.domain.model.error.NoteRequestError
 import com.terabyte.domain.repository.NoteRepository
 import javax.inject.Inject
 

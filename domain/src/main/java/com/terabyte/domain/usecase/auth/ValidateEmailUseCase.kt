@@ -1,4 +1,4 @@
-package com.terabyte.domain.usecase
+package com.terabyte.domain.usecase.auth
 
 import javax.inject.Inject
 import javax.inject.Singleton

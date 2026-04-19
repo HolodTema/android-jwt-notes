@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.terabyte.domain.model.NoteModel
+import com.terabyte.domain.model.note.NoteModel
 import com.terabyte.jwtnotes.R
 import com.terabyte.jwtnotes.ui.theme.JwtNotesTheme
 import com.terabyte.jwtnotes.viewmodel.UpdateNoteScreenState

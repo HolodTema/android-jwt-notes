@@ -1,4 +1,4 @@
-package com.terabyte.data.storage.remote.model
+package com.terabyte.data.storage.remote.model.note
 
 data class NoteJson(
     val id: Int,

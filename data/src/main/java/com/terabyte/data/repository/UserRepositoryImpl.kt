@@ -1,8 +1,8 @@
 package com.terabyte.data.repository
 
 import com.terabyte.data.storage.remote.NetworkStorage
-import com.terabyte.data.storage.remote.model.UserDetailsJson
-import com.terabyte.domain.model.UserDetailsModel
+import com.terabyte.data.storage.remote.model.user.UserDetailsJson
+import com.terabyte.domain.model.user.UserDetailsModel
 import com.terabyte.domain.repository.UserRepository
 import javax.inject.Inject
 import javax.inject.Singleton

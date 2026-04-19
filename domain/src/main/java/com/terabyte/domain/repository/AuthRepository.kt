@@ -1,8 +1,8 @@
 package com.terabyte.domain.repository
 
-import com.terabyte.domain.model.LoginCredentialsModel
-import com.terabyte.domain.model.RegisterCredentialsModel
-import com.terabyte.domain.model.TokenModel
+import com.terabyte.domain.model.auth.LoginCredentialsModel
+import com.terabyte.domain.model.auth.RegisterCredentialsModel
+import com.terabyte.domain.model.auth.TokenModel
 
 interface AuthRepository {
 

@@ -1,6 +1,6 @@
 package com.terabyte.domain.repository
 
-import com.terabyte.domain.model.TokenModel
+import com.terabyte.domain.model.auth.TokenModel
 
 interface TokenRepository {
 

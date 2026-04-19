@@ -1,7 +1,7 @@
 package com.terabyte.domain.repository
 
-import com.terabyte.domain.model.NoteModel
-import com.terabyte.domain.model.NoteRequestError
+import com.terabyte.domain.model.note.NoteModel
+import com.terabyte.domain.model.error.NoteRequestError
 
 interface NoteRepository {
 

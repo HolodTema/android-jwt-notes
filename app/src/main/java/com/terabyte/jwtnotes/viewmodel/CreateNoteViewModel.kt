@@ -2,8 +2,8 @@ package com.terabyte.jwtnotes.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.terabyte.domain.model.NoteRequestError
-import com.terabyte.domain.usecase.CreateNoteUseCase
+import com.terabyte.domain.model.error.NoteRequestError
+import com.terabyte.domain.usecase.note.CreateNoteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

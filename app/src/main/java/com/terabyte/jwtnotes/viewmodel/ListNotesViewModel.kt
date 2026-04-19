@@ -2,13 +2,13 @@ package com.terabyte.jwtnotes.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.terabyte.domain.model.NoteModel
-import com.terabyte.domain.model.NoteRequestError
-import com.terabyte.domain.model.UserDetailsModel
-import com.terabyte.domain.model.UserDetailsRequestError
-import com.terabyte.domain.usecase.GetAllNotesUseCase
-import com.terabyte.domain.usecase.GetUserDetailsUseCase
-import com.terabyte.domain.usecase.LogoutUseCase
+import com.terabyte.domain.model.note.NoteModel
+import com.terabyte.domain.model.error.NoteRequestError
+import com.terabyte.domain.model.user.UserDetailsModel
+import com.terabyte.domain.model.error.UserDetailsRequestError
+import com.terabyte.domain.usecase.note.GetAllNotesUseCase
+import com.terabyte.domain.usecase.user.GetUserDetailsUseCase
+import com.terabyte.domain.usecase.auth.LogoutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

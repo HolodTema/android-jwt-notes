@@ -1,7 +1,7 @@
 package com.terabyte.data.repository
 
 import com.terabyte.data.storage.local.datastore.TokenDataStore
-import com.terabyte.domain.model.TokenModel
+import com.terabyte.domain.model.auth.TokenModel
 import com.terabyte.domain.repository.TokenRepository
 import javax.inject.Inject
 import javax.inject.Singleton
