@@ -1,50 +1,50 @@
 package com.terabyte.jwtnotes.ui.screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.terabyte.jwtnotes.R
 import com.terabyte.jwtnotes.ui.theme.JwtNotesTheme
-import com.terabyte.jwtnotes.ui.visible
 import com.terabyte.jwtnotes.viewmodel.LoginViewModel
 
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
-    onLoginSuccess: () -> Unit,
-    onNavigateToRegistration: () -> Unit
+    onLoginSuccess: () -> Unit = {},
+    onNavigateToRegistration: () -> Unit = {}
 ) {
     val state by viewModel.stateFlowLoginScreenState.collectAsStateWithLifecycle()
 
@@ -56,15 +56,17 @@ fun LoginScreen(
 
     Scaffold(
         topBar = {
-            Text(
-                text = "Log in to your account",
-                fontSize = 22.sp,
-                color = MaterialTheme.colorScheme.onPrimary,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.primary)
-                    .padding(vertical = 8.dp)
+            TopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(R.string.log_in_to_account),
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                )
             )
         }
     ) { paddingValues ->
@@ -74,115 +76,97 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp)
+                .padding(horizontal = 24.dp)
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                Text(
-                    text = "Username:",
-                    fontSize = 16.sp,
-                    color = Color.Black
-                )
-                OutlinedTextField(
-                    value = state.username,
-                    singleLine = true,
-                    onValueChange = {
-                        viewModel.updateUsername(it)
-                    },
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(start = 8.dp)
-                )
-            }
+            // Поле Username
+            OutlinedTextField(
+                value = state.username,
+                onValueChange = { viewModel.updateUsername(it) },
+                label = { Text(stringResource(R.string.username)) },
+                singleLine = true,
+                isError = state.isLoginError,
+                modifier = Modifier.fillMaxWidth()
+            )
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
+            // Поле Password с иконкой видимости
+            OutlinedTextField(
+                value = state.password,
+                onValueChange = { viewModel.updatePassword(it) },
+                label = { Text(stringResource(R.string.password)) },
+                singleLine = true,
+                isError = state.isLoginError,
+                visualTransformation = if (state.isPasswordVisible) {
+                    VisualTransformation.None
+                } else {
+                    PasswordVisualTransformation()
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                trailingIcon = {
+                    IconButton(onClick = { viewModel.updatePasswordVisibility() }) {
+                        Icon(
+                            painter = if (state.isPasswordVisible) {
+                                painterResource(R.drawable.ic_password_invisible)
+                            } else {
+                                painterResource(R.drawable.ic_password_visible)
+                            },
+                            contentDescription = if (state.isPasswordVisible) {
+                                stringResource(R.string.hide_password)
+                            } else {
+                                stringResource(R.string.show_password)
+                            }
+                        )
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp)
-            ) {
-                Text(
-                    text = "Password:",
-                    fontSize = 16.sp,
-                    color = Color.Black
-                )
-                OutlinedTextField(
-                    value = state.password,
-                    singleLine = true,
-                    onValueChange = {
-                        viewModel.updatePassword(it)
-                    },
-                    visualTransformation = if (state.isPasswordVisible) {
-                        VisualTransformation.None
-                    } else {
-                        PasswordVisualTransformation()
-                    },
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(start = 8.dp)
-                )
-                IconButton(
-                    onClick = {
-                        viewModel.updatePasswordVisibility()
-                    }
-                ) {
-                    Icon(
-                        painter = if (state.isPasswordVisible) {
-                            painterResource(R.drawable.ic_password_visible)
-                        } else {
-                            painterResource(R.drawable.ic_password_invisible)
-                        },
-                        contentDescription = null,
-                        tint = Color.Black
-                    )
-                }
-            }
-
-            Text(
-                text = stringResource(R.string.login_error),
-                color = Color.Red,
-                modifier = Modifier
-                    .visible(state.isLoginError)
             )
 
+            // Ошибка логина
+            if (state.isLoginError) {
+                Text(
+                    text = stringResource(R.string.login_error),
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp)
+                )
+            }
 
+            // Кнопка логина или прогресс
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .height(100.dp)
-                    .padding(top = 32.dp)
+                    .height(72.dp)
+                    .padding(top = 24.dp)
             ) {
                 if (state.isLoading) {
-                    CircularProgressIndicator()
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(48.dp),
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 } else {
                     Button(
-                        onClick = {
-                            viewModel.login()
-                        }
+                        onClick = { viewModel.login() },
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(
-                            text = stringResource(R.string.login)
-                        )
+                        Text(stringResource(R.string.login))
                     }
                 }
             }
 
+            // Ссылка на регистрацию
             Text(
                 text = stringResource(R.string.or_create_new_account),
-                color = Color.Blue,
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier
-                    .padding(top = 32.dp)
-                    .clickable {
-                        onNavigateToRegistration()
-                    }
+                    .padding(top = 24.dp)
+                    .clickable { onNavigateToRegistration() }
             )
-
         }
     }
-
 }
 
 

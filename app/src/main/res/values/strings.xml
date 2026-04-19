@@ -1,8 +1,6 @@
 <resources>
     <string name="app_name">JwtNotes</string>
     <string name="login">Log in</string>
-    <string name="or_create_new_account">Or create new account</string>
-    <string name="login_error">Invalid username or password. Try again</string>
     <string name="or_log_in">Already have an account? Log in</string>
     <string name="error_username_busy">Registration error: this username is busy</string>
     <string name="error_unable_to_register">Registration error: check Internet connection</string>
@@ -15,20 +13,26 @@
     <string name="try_again">Try again</string>
     <string name="log_out">Log out</string>
     <string name="amount_notes">Amount notes: %d</string>
-    <string name="session_time_over">Time of this session is over</string>
-    <string name="you_need_to_log_in_again">You need to log in again.</string>
-    <string name="log_in_again">Log in again</string>
     <string name="note_title">Note title</string>
     <string name="note_text">Note text</string>
     <string name="save_note">Save note</string>
     <string name="no_internet">No Internet</string>
-    <string name="create_note">Create new note</string>
     <string name="edit_note">Edit note</string>
-
     <string name="create_new_account">Create new account</string>
     <string name="username">Username</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="hide_password">Hide password</string>
     <string name="show_password">Show password</string>
+    <string name="log_in_to_account">Log in to your account</string>
+    <string name="login_error">Invalid username or password</string>
+    <string name="or_create_new_account">Or create new account</string>
+    <string name="my_notes">My Notes</string>
+    <string name="create_note">Create note</string>
+    <string name="session_expired">Session Expired</string>
+    <string name="session_time_over">Session time is over</string>
+    <string name="you_need_to_log_in_again">You need to log in again</string>
+    <string name="log_in_again">Log in again</string>
+    <string name="delete_note">Delete note</string>
+
 </resources>
