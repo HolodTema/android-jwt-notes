@@ -141,7 +141,7 @@ private fun ScreenStateSuccess(
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
     ) {
         val buttonLogout = createRef()
         val columnUserDetails = createRef()
@@ -231,7 +231,7 @@ private fun ScreenStateSuccess(
             onClick = onCreateNote,
             modifier = Modifier
                 .constrainAs(buttonAddNote) {
-                    bottom.linkTo(parent.bottom)
+                    bottom.linkTo(parent.bottom, 16.dp)
                     end.linkTo(parent.end)
                 }
         ) {
