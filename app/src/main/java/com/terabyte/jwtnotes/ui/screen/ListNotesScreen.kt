@@ -203,6 +203,7 @@ private fun ScreenStateSuccess(
                 .constrainAs(lazyColumnNotes) {
                     top.linkTo(textAmountNotes.bottom)
                     bottom.linkTo(parent.bottom)
+                    height = Dimension.fillToConstraints
                 }
         ) {
             items(notes) { noteModel ->
