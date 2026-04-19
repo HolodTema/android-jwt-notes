@@ -10,5 +10,4 @@ interface AuthRepository {
 
     suspend fun register(registerCredentialsModel: RegisterCredentialsModel): Result<TokenModel>
 
-    suspend fun logout()
 }

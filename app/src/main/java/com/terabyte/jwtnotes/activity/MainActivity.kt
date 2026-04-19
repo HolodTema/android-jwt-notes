@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -16,6 +17,7 @@ import com.terabyte.jwtnotes.ui.screen.CreateNoteScreen
 import com.terabyte.jwtnotes.ui.screen.ListNotesScreen
 import com.terabyte.jwtnotes.ui.screen.LoginScreen
 import com.terabyte.jwtnotes.ui.screen.RegistrationScreen
+import com.terabyte.jwtnotes.ui.screen.TokenExpiredScreen
 import com.terabyte.jwtnotes.ui.screen.UpdateNoteScreen
 import com.terabyte.jwtnotes.ui.theme.JwtNotesTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,10 +43,19 @@ class MainActivity : ComponentActivity() {
                         composable(Route.LoginRoute.route) {
                             LoginScreen(
                                 onLoginSuccess = {
-                                    navController.navigate(Route.ListNotesRoute.route)
+                                    // navigate to ListNotesRoute and clear all the backstack
+                                    navController.navigate(Route.ListNotesRoute.route) {
+                                        popUpTo(Route.LoginRoute.route) {
+                                            inclusive = true
+                                        }
+                                    }
                                 },
                                 onNavigateToRegistration = {
-                                    navController.navigate(Route.RegistrationRoute.route)
+                                    navController.navigate(Route.RegistrationRoute.route) {
+                                        popUpTo(Route.LoginRoute.route) {
+                                            inclusive = true
+                                        }
+                                    }
                                 }
                             )
                         }
@@ -52,16 +63,48 @@ class MainActivity : ComponentActivity() {
                         composable(Route.RegistrationRoute.route) {
                             RegistrationScreen(
                                 onRegistrationSuccess = {
-                                    navController.navigate(Route.ListNotesRoute.route)
+                                    // navigate to ListNotesRoute and clear all the backstack
+                                    navController.navigate(Route.ListNotesRoute.route) {
+                                        popUpTo(Route.RegistrationRoute.route) {
+                                            inclusive = true
+                                        }
+                                    }
                                 },
                                 onNavigateToLogin = {
-                                    navController.navigate(Route.LoginRoute.route)
+                                    navController.navigate(Route.LoginRoute.route) {
+                                        popUpTo(Route.RegistrationRoute.route) {
+                                            inclusive = true
+                                        }
+                                    }
                                 }
                             )
                         }
 
                         composable(Route.ListNotesRoute.route) {
-                            ListNotesScreen()
+                            ListNotesScreen(
+                                onTokenExpired = {
+                                    // navigate to TokenExpiredScreen and clear all the backstack
+                                    navController.navigate(Route.TokenExpiredRoute.route) {
+                                        popUpTo(Route.ListNotesRoute.route) {
+                                            inclusive = true
+                                        }
+                                    }
+                                },
+                                onLogout = {
+                                    // navigate to LoginScreen and clear all the backstack
+                                    navController.navigate(Route.LoginRoute.route) {
+                                        popUpTo(Route.ListNotesRoute.route) {
+                                            inclusive = true
+                                        }
+                                    }
+                                },
+                                onCreateNote = {
+                                    navController.navigate(Route.CreateNoteRoute.route)
+                                },
+                                onUpdateNote = { noteModel ->
+                                    navController.navigate(Route.UpdateNoteRoute.route)
+                                }
+                            )
                         }
 
                         composable(Route.CreateNoteRoute.route) {
@@ -70,6 +113,17 @@ class MainActivity : ComponentActivity() {
 
                         composable(Route.UpdateNoteRoute.route) {
                             UpdateNoteScreen()
+                        }
+
+                        composable(Route.TokenExpiredRoute.route) {
+                            TokenExpiredScreen {
+                                // navigate to LoginScreen and clear all the backstack
+                                navController.navigate(Route.LoginRoute.route) {
+                                    popUpTo(Route.TokenExpiredRoute.route) {
+                                        inclusive = true
+                                    }
+                                }
+                            }
                         }
                     }
                 }

@@ -34,10 +34,6 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun logout() {
-
-    }
-
     private fun mapToLoginRequestJson(loginCredentialsModel: LoginCredentialsModel): LoginRequestJson {
         return LoginRequestJson(
             username = loginCredentialsModel.username,

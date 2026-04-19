@@ -1,13 +1,13 @@
 package com.terabyte.domain.usecase
 
-import com.terabyte.domain.repository.AuthRepository
+import com.terabyte.domain.repository.TokenRepository
 import javax.inject.Inject
 
 class LogoutUseCase @Inject constructor(
-    private val authRepository: AuthRepository
+    private val tokenRepository: TokenRepository
 ) {
 
     suspend operator fun invoke() {
-        authRepository.logout()
+        tokenRepository.deleteToken()
     }
 }

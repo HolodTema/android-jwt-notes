@@ -1,5 +1,6 @@
 package com.terabyte.data.storage.remote
 
+import android.util.Log
 import com.terabyte.domain.repository.TokenRepository
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
@@ -16,7 +17,10 @@ class TokenHttpInterceptor @Inject constructor(
         val originalRequest = chain.request()
         val httpPath = originalRequest.url.encodedPath
 
-        if (!httpPath.contains("/api/notes")) {
+        val isRequestToUserApi = httpPath.contains("/api/user")
+        val isRequestToNotesApi = httpPath.contains("/api/notes")
+
+        if (!(isRequestToNotesApi || isRequestToUserApi)) {
             return chain.proceed(originalRequest)
         }
 
