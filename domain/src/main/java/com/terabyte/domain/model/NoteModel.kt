@@ -10,3 +10,4 @@ data class NoteModel(
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime
 )
+

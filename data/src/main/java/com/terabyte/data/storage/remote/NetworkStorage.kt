@@ -20,4 +20,10 @@ interface NetworkStorage {
 
     suspend fun createNote(noteRequestJson: NoteRequestJson): NoteRequestError?
 
+    suspend fun updateNote(noteId: Int, noteRequestJson: NoteRequestJson): NoteRequestError?
+
+    suspend fun deleteNote(noteId: Int): NoteRequestError?
+
+    suspend fun getNoteById(noteId: Int): Result<NoteJson>
+
 }

@@ -9,4 +9,10 @@ interface NoteRepository {
 
     suspend fun createNote(title: String, content: String): NoteRequestError?
 
+    suspend fun updateNote(noteId: Int, title: String, content: String): NoteRequestError?
+
+    suspend fun deleteNote(noteId: Int): NoteRequestError?
+
+    suspend fun getNoteById(noteId: Int): Result<NoteModel>
+
 }

@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.terabyte.jwtnotes.ui.navigation.Route
 import com.terabyte.jwtnotes.ui.screen.CreateNoteScreen
 import com.terabyte.jwtnotes.ui.screen.ListNotesScreen
@@ -102,7 +104,7 @@ class MainActivity : ComponentActivity() {
                                     navController.navigate(Route.CreateNoteRoute.route)
                                 },
                                 onUpdateNote = { noteModel ->
-                                    navController.navigate(Route.UpdateNoteRoute.route)
+                                    navController.navigate(Route.UpdateNoteRoute(noteModel.id).route)
                                 }
                             )
                         }
@@ -127,8 +129,31 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        composable(Route.UpdateNoteRoute.route) {
-                            UpdateNoteScreen()
+                        composable(
+                            route = Route.UpdateNoteRoute.ROUTE_PLACEHOLDER,
+                            arguments = listOf(navArgument("noteId") {
+                                type = NavType.IntType
+                            })
+                        ) { backStackEntry ->
+                            val noteId = backStackEntry.arguments?.getInt("noteId") ?: error("noteId missing")
+
+                            UpdateNoteScreen(
+                                onTokenExpired = {
+                                    // navigate to TokenExpiredScreen and clear all the backstack
+                                    navController.navigate(Route.TokenExpiredRoute.route) {
+                                        popUpTo(Route.UpdateNoteRoute(noteId).route) {
+                                            inclusive = true
+                                        }
+                                    }
+                                },
+                                onNoteEditingFinished = {
+                                    navController.navigate(Route.ListNotesRoute.route) {
+                                        popUpTo(Route.UpdateNoteRoute(noteId).route) {
+                                            inclusive = true
+                                        }
+                                    }
+                                }
+                            )
                         }
 
                         composable(Route.TokenExpiredRoute.route) {
