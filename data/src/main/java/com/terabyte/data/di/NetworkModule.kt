@@ -9,12 +9,17 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Converter
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
+import okhttp3.MediaType.Companion.toMediaType
+
+
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -57,18 +62,27 @@ abstract class NetworkModule {
         @JvmStatic
         @Provides
         @Singleton
-        fun provideGsonConverterFactory(): GsonConverterFactory {
-            return GsonConverterFactory.create()
+        fun provideConverterFactory(): Converter.Factory {
+            val contentType = "application/json".toMediaType()
+            val json = Json {
+                // to ignore fields, which we cannot convert from Json to our DTO classes
+                ignoreUnknownKeys = true
+
+                // in case we make PUT/POST request and we convert our DTO object to Json,
+                // DTO fields with default values will be included in Json
+                encodeDefaults = true
+            }
+            return json.asConverterFactory(contentType)
         }
 
         @JvmStatic
         @Provides
         @Singleton
-        fun provideRetrofit(client: OkHttpClient, gsonConverterFactory: GsonConverterFactory): Retrofit {
+        fun provideRetrofit(client: OkHttpClient, converterFactory: Converter.Factory): Retrofit {
             return Retrofit.Builder()
                 .baseUrl("http://185.154.52.200/")
                 .client(client)
-                .addConverterFactory(gsonConverterFactory)
+                .addConverterFactory(converterFactory)
                 .build()
         }
 
