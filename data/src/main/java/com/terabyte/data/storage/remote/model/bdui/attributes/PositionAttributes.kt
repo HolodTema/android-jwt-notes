@@ -6,32 +6,32 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @SerialName("sizeSpec")
-sealed class SizeSpec {
+sealed class SizeSpecJson {
 
     @Serializable
     @SerialName("fixed")
-    data class Fixed(val dp: Int) : SizeSpec()
+    data class Fixed(val dp: Int) : SizeSpecJson()
 
     @Serializable
     @SerialName("wrapContent")
-    object WrapContent : SizeSpec()
+    object WrapContent : SizeSpecJson()
 
     @Serializable
     @SerialName("matchParent")
-    object MatchParent : SizeSpec()
+    object MatchParent : SizeSpecJson()
 
     @Serializable
     @SerialName("weight")
     data class Weight(
         val weight: Float
-    ) : SizeSpec()
+    ) : SizeSpecJson()
 
 }
 
 
 @Serializable
 @SerialName("padding")
-data class Padding(
+data class PaddingJson(
     val start: Int = 0,
     val top: Int = 0,
     val end: Int = 0,
@@ -41,7 +41,7 @@ data class Padding(
 
 @Serializable
 @SerialName("margin")
-data class Margin(
+data class MarginJson(
     val start: Int = 0,
     val top: Int = 0,
     val end: Int = 0,
@@ -51,74 +51,74 @@ data class Margin(
 
 @Serializable
 @SerialName("verticalAlignment")
-sealed class VerticalAlignment {
+sealed class VerticalAlignmentJson {
 
     @Serializable
     @SerialName("center")
-    object Center : VerticalAlignment()
+    object Center : VerticalAlignmentJson()
 
     @Serializable
     @SerialName("top")
-    object Top : VerticalAlignment()
+    object Top : VerticalAlignmentJson()
 
     @Serializable
     @SerialName("bottom")
-    object Bottom : VerticalAlignment()
+    object Bottom : VerticalAlignmentJson()
 
 }
 
 
 @Serializable
 @SerialName("horizontalAlignment")
-sealed class HorizontalAlignment {
+sealed class HorizontalAlignmentJson {
 
     @Serializable
     @SerialName("center")
-    object Center : HorizontalAlignment()
+    object Center : HorizontalAlignmentJson()
 
     @Serializable
     @SerialName("end")
-    object End : HorizontalAlignment()
+    object End : HorizontalAlignmentJson()
 
     @Serializable
     @SerialName("start")
-    object Start : HorizontalAlignment()
+    object Start : HorizontalAlignmentJson()
 
 }
 
 @Serializable
 @SerialName("verticalArrangement")
-sealed class VerticalArrangement {
+sealed class VerticalArrangementJson {
 
 
     @Serializable
     @SerialName("center")
-    object Center : VerticalArrangement()
+    object Center : VerticalArrangementJson()
 
 
     @Serializable
     @SerialName("top")
-    object Top : VerticalArrangement()
+    object Top : VerticalArrangementJson()
 
 
     @Serializable
     @SerialName("bottom")
-    object Bottom : VerticalArrangement()
+    object Bottom : VerticalArrangementJson()
 
 
     @Serializable
     @SerialName("spaceBetween")
-    object SpaceBetween : VerticalArrangement()
+    object SpaceBetween : VerticalArrangementJson()
 
 
     @Serializable
     @SerialName("spaceEvenly")
-    object SpaceEvenly : VerticalArrangement()
+    object SpaceEvenly : VerticalArrangementJson()
 
 
     @Serializable
     @SerialName("spaceAround")
-    object SpaceAround : VerticalArrangement()
+    object SpaceAround : VerticalArrangementJson()
 
 
 }
@@ -126,30 +126,30 @@ sealed class VerticalArrangement {
 
 @Serializable
 @SerialName("horizontalArrangement")
-sealed class HorizontalArrangement {
+sealed class HorizontalArrangementJson {
 
     @Serializable
     @SerialName("center")
-    object Center : HorizontalArrangement()
+    object Center : HorizontalArrangementJson()
 
     @Serializable
     @SerialName("start")
-    object Start : HorizontalArrangement()
+    object Start : HorizontalArrangementJson()
 
     @Serializable
     @SerialName("end")
-    object End : HorizontalArrangement()
+    object End : HorizontalArrangementJson()
 
     @Serializable
     @SerialName("spaceBetween")
-    object SpaceBetween : HorizontalArrangement()
+    object SpaceBetween : HorizontalArrangementJson()
 
     @Serializable
     @SerialName("spaceEvenly")
-    object SpaceEvenly : HorizontalArrangement()
+    object SpaceEvenly : HorizontalArrangementJson()
 
     @Serializable
     @SerialName("spaceAround")
-    object SpaceAround : HorizontalArrangement()
+    object SpaceAround : HorizontalArrangementJson()
 
 }

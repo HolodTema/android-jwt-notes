@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @SerialName("textStyle")
-data class TextStyle(
+data class TextStyleJson(
     val fontSize: Int? = null,
     val colorHex: String? = null
 )

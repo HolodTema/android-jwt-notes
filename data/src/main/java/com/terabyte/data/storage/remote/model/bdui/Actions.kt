@@ -6,19 +6,19 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @SerialName("Action")
-sealed class Action {
+sealed class ActionJson {
 }
 
 
 @Serializable
 @SerialName("ToastAction")
-data class ToastAction(
+data class ToastActionJson (
     val message: String
-) : Action() {
+) : ActionJson() {
 }
 
 
 @Serializable
 @SerialName("CreateNoteAction")
-object CreateNoteAction: Action() {
+object CreateNoteActionJson : ActionJson() {
 }

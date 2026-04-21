@@ -1,10 +1,12 @@
 package com.terabyte.data.di
 
 import com.terabyte.data.repository.AuthRepositoryImpl
+import com.terabyte.data.repository.BdUiRepositoryImpl
 import com.terabyte.data.repository.NoteRepositoryImpl
 import com.terabyte.data.repository.TokenRepositoryImpl
 import com.terabyte.data.repository.UserRepositoryImpl
 import com.terabyte.domain.repository.AuthRepository
+import com.terabyte.domain.repository.BdUiRepository
 import com.terabyte.domain.repository.NoteRepository
 import com.terabyte.domain.repository.TokenRepository
 import com.terabyte.domain.repository.UserRepository
@@ -34,5 +36,9 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindUserRepository(userRepository: UserRepositoryImpl): UserRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindBdUiRepository(bdUiRepository: BdUiRepositoryImpl): BdUiRepository
 
 }

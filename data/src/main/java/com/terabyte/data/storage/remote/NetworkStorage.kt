@@ -5,6 +5,7 @@ import com.terabyte.data.storage.remote.model.auth.LoginResponseJson
 import com.terabyte.data.storage.remote.model.note.NoteJson
 import com.terabyte.data.storage.remote.model.note.NoteRequestJson
 import com.terabyte.data.storage.remote.model.auth.RegisterRequestJson
+import com.terabyte.data.storage.remote.model.bdui.ComponentJson
 import com.terabyte.data.storage.remote.model.user.UserDetailsJson
 import com.terabyte.domain.model.error.NoteRequestError
 
@@ -26,4 +27,5 @@ interface NetworkStorage {
 
     suspend fun getNoteById(noteId: Int): Result<NoteJson>
 
+    suspend fun getCreateNoteScreenBdUi(): Result<ComponentJson>
 }

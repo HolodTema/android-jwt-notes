@@ -1,11 +1,14 @@
 package com.terabyte.data.storage.remote
 
+import android.R
 import com.terabyte.data.storage.remote.model.auth.LoginRequestJson
 import com.terabyte.data.storage.remote.model.auth.LoginResponseJson
 import com.terabyte.data.storage.remote.model.note.NoteJson
 import com.terabyte.data.storage.remote.model.note.NoteRequestJson
 import com.terabyte.data.storage.remote.model.auth.RegisterRequestJson
+import com.terabyte.data.storage.remote.model.bdui.ComponentJson
 import com.terabyte.data.storage.remote.model.user.UserDetailsJson
+import com.terabyte.domain.model.error.BdUiRequestError
 import com.terabyte.domain.model.error.NoteRequestError
 import com.terabyte.domain.model.error.RegistrationError
 import com.terabyte.domain.model.error.UserDetailsRequestError
@@ -158,6 +161,27 @@ class NetworkStorageImpl @Inject constructor(
             }
             else {
                 Result.failure(NoteRequestError.UnknownError())
+            }
+        }
+    }
+
+    override suspend fun getCreateNoteScreenBdUi(): Result<ComponentJson> {
+        val response = retrofitService.getCreateNoteScreenBdUi()
+        return if (response.isSuccessful) {
+            val body = response.body()
+            if (body == null) {
+                Result.failure(BdUiRequestError.UnknownError())
+            }
+            else {
+                Result.success(body)
+            }
+        }
+        else {
+            if (response.code() == 401) {
+                Result.failure(BdUiRequestError.TokenExpiredError())
+            }
+            else {
+                Result.failure(BdUiRequestError.UnknownError())
             }
         }
     }

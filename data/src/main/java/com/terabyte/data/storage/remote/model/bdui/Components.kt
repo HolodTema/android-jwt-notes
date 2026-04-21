@@ -1,89 +1,89 @@
 package com.terabyte.data.storage.remote.model.bdui
 
-import com.terabyte.data.storage.remote.model.bdui.attributes.HorizontalAlignment
-import com.terabyte.data.storage.remote.model.bdui.attributes.HorizontalArrangement
-import com.terabyte.data.storage.remote.model.bdui.attributes.Margin
-import com.terabyte.data.storage.remote.model.bdui.attributes.Padding
-import com.terabyte.data.storage.remote.model.bdui.attributes.SizeSpec
-import com.terabyte.data.storage.remote.model.bdui.attributes.TextStyle
-import com.terabyte.data.storage.remote.model.bdui.attributes.VerticalAlignment
-import com.terabyte.data.storage.remote.model.bdui.attributes.VerticalArrangement
+import com.terabyte.data.storage.remote.model.bdui.attributes.HorizontalAlignmentJson
+import com.terabyte.data.storage.remote.model.bdui.attributes.HorizontalArrangementJson
+import com.terabyte.data.storage.remote.model.bdui.attributes.MarginJson
+import com.terabyte.data.storage.remote.model.bdui.attributes.PaddingJson
+import com.terabyte.data.storage.remote.model.bdui.attributes.SizeSpecJson
+import com.terabyte.data.storage.remote.model.bdui.attributes.TextStyleJson
+import com.terabyte.data.storage.remote.model.bdui.attributes.VerticalAlignmentJson
+import com.terabyte.data.storage.remote.model.bdui.attributes.VerticalArrangementJson
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 
 @Serializable
 @SerialName("Component")
-sealed class Component {
-    abstract val width: SizeSpec
-    abstract val height: SizeSpec
-    abstract val padding: Padding
-    abstract val margin: Margin
+sealed class ComponentJson {
+    abstract val width: SizeSpecJson
+    abstract val height: SizeSpecJson
+    abstract val padding: PaddingJson
+    abstract val margin: MarginJson
 }
 
 
 @Serializable
 @SerialName("Column")
-data class ColumnComponent(
-    override val width: SizeSpec,
-    override val height: SizeSpec,
-    override val padding: Padding = Padding(),
-    override val margin: Margin = Margin(),
-    val verticalArrangement: VerticalArrangement,
-    val horizontalAlignment: HorizontalAlignment,
+data class ColumnComponentJson(
+    override val width: SizeSpecJson,
+    override val height: SizeSpecJson,
+    override val padding: PaddingJson = PaddingJson(),
+    override val margin: MarginJson = MarginJson(),
+    val verticalArrangement: VerticalArrangementJson,
+    val horizontalAlignment: HorizontalAlignmentJson,
     val backgroundColorHex: String? = null,
-    val children: List<Component>
-) : Component()
+    val children: List<ComponentJson>
+) : ComponentJson()
 
 
 @Serializable
 @SerialName("Row")
-data class RowComponent(
-    override val width: SizeSpec,
-    override val height: SizeSpec,
-    override val padding: Padding = Padding(),
-    override val margin: Margin = Margin(),
-    val verticalAlignment: VerticalAlignment,
-    val horizontalArrangement: HorizontalArrangement,
+data class RowComponentJson(
+    override val width: SizeSpecJson,
+    override val height: SizeSpecJson,
+    override val padding: PaddingJson = PaddingJson(),
+    override val margin: MarginJson = MarginJson(),
+    val verticalAlignment: VerticalAlignmentJson,
+    val horizontalArrangement: HorizontalArrangementJson,
     val backgroundColorHex: String? = null,
-    val children: List<Component>
-) : Component()
+    val children: List<ComponentJson>
+) : ComponentJson()
 
 
 @Serializable
 @SerialName("Text")
-data class TextComponent(
-    override val width: SizeSpec,
-    override val height: SizeSpec,
-    override val padding: Padding = Padding(),
-    override val margin: Margin = Margin(),
+data class TextComponentJson(
+    override val width: SizeSpecJson,
+    override val height: SizeSpecJson,
+    override val padding: PaddingJson = PaddingJson(),
+    override val margin: MarginJson = MarginJson(),
     val text: String,
-    val style: TextStyle? = null
-) : Component()
+    val style: TextStyleJson? = null
+) : ComponentJson()
 
 
 @Serializable
 @SerialName("TextField")
-data class TextFieldComponent(
-    override val width: SizeSpec,
-    override val height: SizeSpec,
-    override val padding: Padding = Padding(),
-    override val margin: Margin = Margin(),
+data class TextFieldComponentJson(
+    override val width: SizeSpecJson,
+    override val height: SizeSpecJson,
+    override val padding: PaddingJson = PaddingJson(),
+    override val margin: MarginJson = MarginJson(),
     val singleLine: Boolean = true,
     val hint: String = "",
-    val style: TextStyle? = null
-) : Component()
+    val style: TextStyleJson? = null
+) : ComponentJson()
 
 
 @Serializable
 @SerialName("Button")
-data class ButtonComponent(
-    override val width: SizeSpec,
-    override val height: SizeSpec,
-    override val padding: Padding = Padding(),
-    override val margin: Margin = Margin(),
+data class ButtonComponentJson(
+    override val width: SizeSpecJson,
+    override val height: SizeSpecJson,
+    override val padding: PaddingJson = PaddingJson(),
+    override val margin: MarginJson = MarginJson(),
     val text: String,
     val textColorHex: String? = null,
     val backgroundColorHex: String? = null,
-    val action: Action
-) : Component()
+    val action: ActionJson
+) : ComponentJson()

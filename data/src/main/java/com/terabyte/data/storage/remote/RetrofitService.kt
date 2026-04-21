@@ -5,6 +5,7 @@ import com.terabyte.data.storage.remote.model.auth.LoginResponseJson
 import com.terabyte.data.storage.remote.model.note.NoteJson
 import com.terabyte.data.storage.remote.model.note.NoteRequestJson
 import com.terabyte.data.storage.remote.model.auth.RegisterRequestJson
+import com.terabyte.data.storage.remote.model.bdui.ComponentJson
 import com.terabyte.data.storage.remote.model.user.UserDetailsJson
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -49,4 +50,7 @@ interface RetrofitService {
 
     @GET("api/notes/{id}")
     suspend fun getNoteById(@Query("id") noteId: Int): Response<NoteJson>
+
+    @GET("api/bd_ui/create_note")
+    suspend fun getCreateNoteScreenBdUi(): Response<ComponentJson>
 }
