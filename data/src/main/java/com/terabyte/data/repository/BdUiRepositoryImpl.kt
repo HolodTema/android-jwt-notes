@@ -131,6 +131,7 @@ class BdUiRepositoryImpl @Inject constructor(
             height = height.toDomain(),
             padding = padding.toDomain(),
             margin = margin.toDomain(),
+            id = id,
             singleLine = singleLine,
             hint = hint,
             style = style?.toDomain()

@@ -57,6 +57,7 @@ data class TextFieldComponent(
     override val height: SizeSpec,
     override val padding: Padding = Padding(),
     override val margin: Margin = Margin(),
+    val id: String,
     val singleLine: Boolean = true,
     val hint: String = "",
     val style: TextStyle? = null

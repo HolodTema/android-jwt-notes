@@ -69,6 +69,7 @@ data class TextFieldComponentJson(
     override val height: SizeSpecJson,
     override val padding: PaddingJson = PaddingJson(),
     override val margin: MarginJson = MarginJson(),
+    val id: String,
     val singleLine: Boolean = true,
     val hint: String = "",
     val style: TextStyleJson? = null
