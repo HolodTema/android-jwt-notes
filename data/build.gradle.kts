@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.kotlin.serialization) apply false
 }
 
 android {
@@ -44,7 +45,8 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
 
     implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.gson)
+    implementation(libs.retrofit.converter.kotlinx.serialization)
+    implementation(libs.kotlinx.serialization)
     implementation(libs.okhttp.logging.interceptor)
 
     implementation(libs.android.hilt)
