@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-@SerialName("Action")
 sealed class ActionJson {
 }
 

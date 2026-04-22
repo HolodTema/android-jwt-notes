@@ -17,7 +17,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.terabyte.domain.model.bdui.Component
 import com.terabyte.jwtnotes.R
+import com.terabyte.jwtnotes.ui.bdui.BdUiRenderer
 import com.terabyte.jwtnotes.viewmodel.CreateNoteBdUiScreenState
 import com.terabyte.jwtnotes.viewmodel.CreateNoteBdUiViewModel
 
@@ -27,26 +29,34 @@ fun CreateNoteBdUiScreen(
     viewModel: CreateNoteBdUiViewModel = hiltViewModel(),
     onTokenExpired: () -> Unit,
     onNoteCreated: () -> Unit
-    ) {
+) {
     val state by viewModel.stateFlowScreenState.collectAsStateWithLifecycle()
 
     when (state) {
         is CreateNoteBdUiScreenState.Loading -> {
             ScreenStateLoading()
         }
+
         is CreateNoteBdUiScreenState.ErrorNoInternet -> {
             ScreenStateErrorNoInternet {
                 viewModel.loadBdUi()
             }
         }
+
         is CreateNoteBdUiScreenState.ErrorTokenExpired -> {
             onTokenExpired()
         }
+
         is CreateNoteBdUiScreenState.NoteCreated -> {
             onNoteCreated()
         }
-        is CreateNoteBdUiScreenState.Success -> {
 
+        is CreateNoteBdUiScreenState.Success -> {
+            ScreenStateSuccess(
+                (state as CreateNoteBdUiScreenState.Success).component,
+                (state as CreateNoteBdUiScreenState.Success).mapTextFieldStates,
+                viewModel::onTextFieldValueChange
+            )
         }
     }
 }
@@ -86,4 +96,18 @@ private fun ScreenStateErrorNoInternet(onTryAgain: () -> Unit) {
             Text(stringResource(R.string.try_again))
         }
     }
+}
+
+
+@Composable
+private fun ScreenStateSuccess(
+    component: Component,
+    mapTextFieldStates: MutableMap<String, String>,
+    onTextFieldValueChange: (String, String) -> Unit,
+) {
+    BdUiRenderer(
+        component = component,
+        mapTextFieldStates = mapTextFieldStates,
+        onTextFieldValueChange = onTextFieldValueChange,
+    ) { }
 }

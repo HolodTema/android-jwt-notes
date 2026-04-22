@@ -5,12 +5,12 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-@SerialName("sizeSpec")
 sealed class SizeSpecJson {
 
     @Serializable
     @SerialName("fixed")
     data class Fixed(val dp: Int) : SizeSpecJson()
+
 
     @Serializable
     @SerialName("wrapContent")
@@ -50,7 +50,6 @@ data class MarginJson(
 
 
 @Serializable
-@SerialName("verticalAlignment")
 sealed class VerticalAlignmentJson {
 
     @Serializable
@@ -69,7 +68,6 @@ sealed class VerticalAlignmentJson {
 
 
 @Serializable
-@SerialName("horizontalAlignment")
 sealed class HorizontalAlignmentJson {
 
     @Serializable
@@ -87,7 +85,6 @@ sealed class HorizontalAlignmentJson {
 }
 
 @Serializable
-@SerialName("verticalArrangement")
 sealed class VerticalArrangementJson {
 
 
@@ -125,7 +122,6 @@ sealed class VerticalArrangementJson {
 
 
 @Serializable
-@SerialName("horizontalArrangement")
 sealed class HorizontalArrangementJson {
 
     @Serializable

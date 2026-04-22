@@ -4,6 +4,8 @@ sealed class Route(val route: String) {
 
     data object CreateNoteRoute : Route("createNote")
 
+    data object CreateNoteBdUiRoute : Route("createNoteBdUi")
+
     data class UpdateNoteRoute(val noteId: Int) : Route("updateNote/$noteId") {
         companion object {
             const val ROUTE_PLACEHOLDER = "updateNote/{noteId}"

@@ -38,7 +38,7 @@ class CreateNoteBdUiViewModel @Inject constructor(
 
             withContext(Dispatchers.Main) {
                 if (result.isSuccess) {
-                    _stateFlowScreenState.value = CreateNoteBdUiScreenState.Success(result.getOrThrow())
+                    _stateFlowScreenState.value = CreateNoteBdUiScreenState.Success(result.getOrThrow(), mutableMapOf())
                 }
                 else {
                     val error = result.exceptionOrNull()
@@ -60,8 +60,8 @@ class CreateNoteBdUiViewModel @Inject constructor(
     fun createNote() {
         if (stateFlowScreenState.value is CreateNoteBdUiScreenState.Success) {
             val state = stateFlowScreenState.value as CreateNoteBdUiScreenState.Success
-            val title = state.noteTitle
-            val content = state.noteContent
+            val title = ""
+            val content = ""
 
             viewModelScope.launch(Dispatchers.IO) {
                 val noteRequestError = createNoteUseCase(title, content)
@@ -84,29 +84,22 @@ class CreateNoteBdUiViewModel @Inject constructor(
     }
 
 
-    fun updateNoteTitle(title: String) {
-        if (stateFlowScreenState.value is CreateNoteBdUiScreenState.Success) {
-            val oldState = stateFlowScreenState.value as CreateNoteBdUiScreenState.Success
+    fun onTextFieldValueChange(
+        textFieldId: String,
+        value: String
+    ) {
+        val state = _stateFlowScreenState.value
+        if (state is CreateNoteBdUiScreenState.Success) {
+            val mapStates = state.mapTextFieldStates
+            mapStates[textFieldId] = value
 
             _stateFlowScreenState.value = CreateNoteBdUiScreenState.Success(
-                component = oldState.component,
-                noteTitle = title,
-                noteContent = oldState.noteContent
+                component = state.component,
+                mapTextFieldStates = mapStates
             )
         }
     }
 
-    fun updateNoteContent(content: String) {
-        if (stateFlowScreenState.value is CreateNoteBdUiScreenState.Success) {
-            val oldState = stateFlowScreenState.value as CreateNoteBdUiScreenState.Success
-
-            _stateFlowScreenState.value = CreateNoteBdUiScreenState.Success(
-                component = oldState.component,
-                noteTitle = oldState.noteTitle,
-                noteContent = content
-            )
-        }
-    }
 }
 
 
@@ -122,8 +115,7 @@ sealed class CreateNoteBdUiScreenState {
 
     data class Success(
         val component: Component,
-        val noteTitle: String = "",
-        val noteContent: String = ""
+        val mapTextFieldStates: MutableMap<String, String>
     ) : CreateNoteBdUiScreenState()
 }
 

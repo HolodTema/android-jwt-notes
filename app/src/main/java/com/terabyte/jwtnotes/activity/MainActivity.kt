@@ -15,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.terabyte.jwtnotes.ui.navigation.Route
+import com.terabyte.jwtnotes.ui.screen.CreateNoteBdUiScreen
 import com.terabyte.jwtnotes.ui.screen.CreateNoteScreen
 import com.terabyte.jwtnotes.ui.screen.ListNotesScreen
 import com.terabyte.jwtnotes.ui.screen.LoginScreen
@@ -101,7 +102,7 @@ class MainActivity : ComponentActivity() {
                                     }
                                 },
                                 onCreateNote = {
-                                    navController.navigate(Route.CreateNoteRoute.route)
+                                    navController.navigate(Route.CreateNoteBdUiRoute.route)
                                 },
                                 onUpdateNote = { noteModel ->
                                     navController.navigate(Route.UpdateNoteRoute(noteModel.id).route)
@@ -111,6 +112,26 @@ class MainActivity : ComponentActivity() {
 
                         composable(Route.CreateNoteRoute.route) {
                             CreateNoteScreen(
+                                onTokenExpired = {
+                                    // navigate to TokenExpiredScreen and clear all the backstack
+                                    navController.navigate(Route.TokenExpiredRoute.route) {
+                                        popUpTo(Route.CreateNoteRoute.route) {
+                                            inclusive = true
+                                        }
+                                    }
+                                },
+                                onNoteCreated = {
+                                    navController.navigate(Route.ListNotesRoute.route) {
+                                        popUpTo(Route.CreateNoteRoute.route) {
+                                            inclusive = true
+                                        }
+                                    }
+                                }
+                            )
+                        }
+
+                        composable(Route.CreateNoteBdUiRoute.route) {
+                            CreateNoteBdUiScreen(
                                 onTokenExpired = {
                                     // navigate to TokenExpiredScreen and clear all the backstack
                                     navController.navigate(Route.TokenExpiredRoute.route) {

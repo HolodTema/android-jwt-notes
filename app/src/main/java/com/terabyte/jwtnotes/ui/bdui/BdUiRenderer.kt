@@ -1,6 +1,9 @@
 package com.terabyte.jwtnotes.ui.bdui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,8 +21,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.toColorInt
+import com.terabyte.domain.model.bdui.Action
+import com.terabyte.domain.model.bdui.ButtonComponent
+import com.terabyte.domain.model.bdui.ColumnComponent
 import com.terabyte.domain.model.bdui.Component
+import com.terabyte.domain.model.bdui.RowComponent
 import com.terabyte.domain.model.bdui.TextComponent
+import com.terabyte.domain.model.bdui.TextFieldComponent
 import com.terabyte.domain.model.bdui.attributes.HorizontalAlignment
 import com.terabyte.domain.model.bdui.attributes.HorizontalArrangement
 import com.terabyte.domain.model.bdui.attributes.Margin
@@ -29,17 +38,55 @@ import com.terabyte.domain.model.bdui.attributes.TextStyle
 import com.terabyte.domain.model.bdui.attributes.VerticalAlignment
 import com.terabyte.domain.model.bdui.attributes.VerticalArrangement
 import androidx.compose.ui.text.TextStyle as ComposeTextStyle
-import android.graphics.Color as AndroidColor
-import androidx.core.graphics.toColorInt
-import com.terabyte.domain.model.bdui.Action
-import com.terabyte.domain.model.bdui.ButtonComponent
-import com.terabyte.domain.model.bdui.TextFieldComponent
-import com.terabyte.jwtnotes.ui.bdui.padding
 
 
 @Composable
-fun  BdUiRenderer(component: Component) {
+fun BdUiRenderer(
+    component: Component,
+    mapTextFieldStates: Map<String, String>,
+    onTextFieldValueChange: (String, String) -> Unit,
+    onAction: (Action) -> Unit
+) {
+    when (component) {
+        is ColumnComponent -> {
+            RenderColumn(
+                columnComponent = component,
+                mapTextFieldStates = mapTextFieldStates,
+                onTextFieldValueChange = onTextFieldValueChange,
+                onAction = onAction
+            )
+        }
 
+        is RowComponent -> {
+            RenderRow(
+                rowComponent = component,
+                mapTextFieldStates = mapTextFieldStates,
+                onTextFieldValueChange = onTextFieldValueChange,
+                onAction = onAction
+            )
+        }
+
+        is TextComponent -> {
+            RenderText(
+                textComponent = component
+            )
+        }
+
+        is ButtonComponent -> {
+            RenderButton(
+                buttonComponent = component,
+                onAction = onAction
+            )
+        }
+
+        is TextFieldComponent -> {
+            RenderTextField(
+                textFieldComponent = component,
+                mapTextFieldStates = mapTextFieldStates,
+                onValueChange = onTextFieldValueChange
+            )
+        }
+    }
 }
 
 
@@ -62,18 +109,21 @@ private fun TextStyle?.toComposeTextStyle(): ComposeTextStyle {
 
 
 private fun Modifier.convertSizeSpecToWidth(sizeSpec: SizeSpec): Modifier {
-    return when(sizeSpec) {
+    return when (sizeSpec) {
         is SizeSpec.Fixed -> {
             this.width(sizeSpec.dp.dp)
         }
+
         SizeSpec.MatchParent -> {
             this.fillMaxWidth()
         }
+
         is SizeSpec.Weight -> {
             this
             // do nothing, because of weight will be handled
             // only if component is in RowScope or ColumnScope
         }
+
         SizeSpec.WrapContent -> {
             this.wrapContentWidth()
         }
@@ -82,18 +132,21 @@ private fun Modifier.convertSizeSpecToWidth(sizeSpec: SizeSpec): Modifier {
 
 
 private fun Modifier.convertSizeSpecToHeight(sizeSpec: SizeSpec): Modifier {
-    return when(sizeSpec) {
+    return when (sizeSpec) {
         is SizeSpec.Fixed -> {
             this.height(sizeSpec.dp.dp)
         }
+
         SizeSpec.MatchParent -> {
             this.fillMaxHeight()
         }
+
         is SizeSpec.Weight -> {
             this
             // do nothing, because of weight will be handled
             // only if component is in RowScope or ColumnScope
         }
+
         SizeSpec.WrapContent -> {
             this.wrapContentHeight()
         }
@@ -126,9 +179,11 @@ private fun HorizontalAlignment.toComposeAlignment(): Alignment.Horizontal {
         HorizontalAlignment.Center -> {
             Alignment.CenterHorizontally
         }
+
         HorizontalAlignment.End -> {
             Alignment.End
         }
+
         HorizontalAlignment.Start -> {
             Alignment.Start
         }
@@ -141,9 +196,11 @@ private fun VerticalAlignment.toComposeAlignment(): Alignment.Vertical {
         VerticalAlignment.Center -> {
             Alignment.CenterVertically
         }
+
         VerticalAlignment.Top -> {
             Alignment.Top
         }
+
         VerticalAlignment.Bottom -> {
             Alignment.Bottom
         }
@@ -156,18 +213,23 @@ private fun HorizontalArrangement.toComposeArrangement(): Arrangement.Horizontal
         HorizontalArrangement.Center -> {
             Arrangement.Center
         }
+
         HorizontalArrangement.End -> {
             Arrangement.End
         }
+
         HorizontalArrangement.SpaceAround -> {
             Arrangement.SpaceAround
         }
+
         HorizontalArrangement.SpaceBetween -> {
             Arrangement.SpaceBetween
         }
+
         HorizontalArrangement.SpaceEvenly -> {
             Arrangement.SpaceEvenly
         }
+
         HorizontalArrangement.Start -> {
             Arrangement.Start
         }
@@ -180,20 +242,106 @@ private fun VerticalArrangement.toComposeArrangement(): Arrangement.Vertical {
         VerticalArrangement.Center -> {
             Arrangement.Center
         }
+
         VerticalArrangement.SpaceAround -> {
             Arrangement.SpaceAround
         }
+
         VerticalArrangement.SpaceBetween -> {
             Arrangement.SpaceBetween
         }
+
         VerticalArrangement.SpaceEvenly -> {
             Arrangement.SpaceEvenly
         }
+
         VerticalArrangement.Bottom -> {
             Arrangement.Bottom
         }
+
         VerticalArrangement.Top -> {
             Arrangement.Top
+        }
+    }
+}
+
+
+//@Composable
+//private fun RowScope.RowScopeChild(
+//    childComponent: Component,
+//    mapTextFieldStates: Map<String, String>,
+//    onTextFieldValueChange: (String, String) -> Unit,
+//    onAction: (Action) -> Unit,
+//) {
+//    val modifierWidth = if (childComponent.width is SizeSpec.Weight) {
+//        Modifier.weight((childComponent.width as SizeSpec.Weight).weight)
+//    }
+//    else {
+//        Modifier.convertSizeSpecToWidth(childComponent.width)
+//    }
+//
+//    val modifierHeight = Modifier.convertSizeSpecToHeight(childComponent.height)
+//
+//    val modifierChildComponent =
+//}
+
+@Composable
+private fun RenderColumn(
+    columnComponent: ColumnComponent,
+    mapTextFieldStates: Map<String, String>,
+    onTextFieldValueChange: (String, String) -> Unit,
+    onAction: (Action) -> Unit,
+) {
+    val backgroundColor = columnComponent.backgroundColorHex.toComposeColor()
+
+    Column(
+        horizontalAlignment = columnComponent.horizontalAlignment.toComposeAlignment(),
+        verticalArrangement = columnComponent.verticalArrangement.toComposeArrangement(),
+        modifier = Modifier
+            .margin(columnComponent.margin)
+            .convertSizeSpecToWidth(columnComponent.width)
+            .convertSizeSpecToHeight(columnComponent.height)
+            .background(backgroundColor)
+            .padding(columnComponent.padding)
+    ) {
+        columnComponent.children.forEach { child ->
+            BdUiRenderer(
+                component = child,
+                mapTextFieldStates = mapTextFieldStates,
+                onTextFieldValueChange = onTextFieldValueChange,
+                onAction = onAction
+            )
+        }
+    }
+}
+
+
+@Composable
+private fun RenderRow(
+    rowComponent: RowComponent,
+    mapTextFieldStates: Map<String, String>,
+    onTextFieldValueChange: (String, String) -> Unit,
+    onAction: (Action) -> Unit,
+) {
+    val backgroundColor = rowComponent.backgroundColorHex.toComposeColor()
+
+    Row(
+        verticalAlignment = rowComponent.verticalAlignment.toComposeAlignment(),
+        horizontalArrangement = rowComponent.horizontalArrangement.toComposeArrangement(),
+        modifier = Modifier
+            .margin(rowComponent.margin)
+            .convertSizeSpecToWidth(rowComponent.width)
+            .convertSizeSpecToHeight(rowComponent.height)
+            .background(backgroundColor)
+            .padding(rowComponent.padding)
+    ) {
+        rowComponent.children.forEach { child ->
+            BdUiRenderer(
+                component = child,
+                mapTextFieldStates = mapTextFieldStates,
+                onTextFieldValueChange = onTextFieldValueChange,
+                onAction = onAction
+            )
         }
     }
 }
@@ -249,15 +397,14 @@ fun RenderTextField(
     textFieldComponent: TextFieldComponent,
     mapTextFieldStates: Map<String, String>,
     onValueChange: (String, String) -> Unit,
-    stateId: String
 ) {
-    val currentValue = mapTextFieldStates[stateId] ?: ""
+    val currentValue = mapTextFieldStates[textFieldComponent.id] ?: ""
     val composeTextStyle = textFieldComponent.style.toComposeTextStyle()
 
     OutlinedTextField(
         value = currentValue,
         onValueChange = {
-            onValueChange(stateId, it)
+            onValueChange(textFieldComponent.id, it)
         },
         label = {
             Text(
