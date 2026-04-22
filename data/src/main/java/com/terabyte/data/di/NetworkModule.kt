@@ -65,12 +65,7 @@ abstract class NetworkModule {
         fun provideConverterFactory(): Converter.Factory {
             val contentType = "application/json".toMediaType()
             val json = Json {
-                // to ignore fields, which we cannot convert from Json to our DTO classes
                 ignoreUnknownKeys = true
-
-                // in case we make PUT/POST request and we convert our DTO object to Json,
-                // DTO fields with default values will be included in Json
-                encodeDefaults = true
             }
             return json.asConverterFactory(contentType)
         }

@@ -13,7 +13,6 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-//@SerialName("Component")
 sealed class ComponentJson {
     abstract val width: SizeSpecJson
     abstract val height: SizeSpecJson
