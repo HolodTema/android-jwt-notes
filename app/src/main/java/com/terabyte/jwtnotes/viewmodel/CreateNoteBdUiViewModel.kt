@@ -2,7 +2,11 @@ package com.terabyte.jwtnotes.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.terabyte.domain.model.bdui.ColumnComponent
 import com.terabyte.domain.model.bdui.Component
+import com.terabyte.domain.model.bdui.RowComponent
+import com.terabyte.domain.model.bdui.TextComponent
+import com.terabyte.domain.model.bdui.TextFieldComponent
 import com.terabyte.domain.model.error.BdUiRequestError
 import com.terabyte.domain.model.error.NoteRequestError
 import com.terabyte.domain.usecase.bdui.GetCreateNoteScreenBdUiUseCase
@@ -15,6 +19,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.collections.forEach
 
 
 @HiltViewModel
@@ -25,6 +30,9 @@ class CreateNoteBdUiViewModel @Inject constructor(
     private val _stateFlowScreenState =
         MutableStateFlow<CreateNoteBdUiScreenState>(CreateNoteBdUiScreenState.Loading)
     val stateFlowScreenState = _stateFlowScreenState.asStateFlow()
+
+    private val _stateFlowMapTextFieldStates = MutableStateFlow<Map<String, String>>(emptyMap())
+    val stateFlowMapTextFieldStates = _stateFlowMapTextFieldStates.asStateFlow()
 
     init {
         loadBdUi()
@@ -38,7 +46,7 @@ class CreateNoteBdUiViewModel @Inject constructor(
 
             withContext(Dispatchers.Main) {
                 if (result.isSuccess) {
-                    _stateFlowScreenState.value = CreateNoteBdUiScreenState.Success(result.getOrThrow(), mutableMapOf())
+                    _stateFlowScreenState.value = CreateNoteBdUiScreenState.Success(result.getOrThrow())
                 }
                 else {
                     val error = result.exceptionOrNull()
@@ -84,19 +92,64 @@ class CreateNoteBdUiViewModel @Inject constructor(
     }
 
 
-    fun onTextFieldValueChange(
-        textFieldId: String,
-        value: String
-    ) {
-        val state = _stateFlowScreenState.value
-        if (state is CreateNoteBdUiScreenState.Success) {
-            val mapStates = state.mapTextFieldStates
-            mapStates[textFieldId] = value
+    // sync mapTextFieldStates with actual list of textFieldIds from component
+    //
+    // existing ids from old mapTextFieldStates are paired to their old values
+    // new ids are paired with ""
+    // not-existing ids are deleted
+    //
+    // we need to do such sync every time we get new BDUI json
+    fun syncTextFieldsWithComponent(component: Component) {
+        val ids = extractTextFieldIds(component)
+        _stateFlowMapTextFieldStates.update { oldMap ->
+            val newMap = mutableMapOf<String, String>()
+            ids.forEach { id ->
+                newMap[id] = oldMap[id] ?: ""
+            }
+            newMap
+        }
+    }
 
-            _stateFlowScreenState.value = CreateNoteBdUiScreenState.Success(
-                component = state.component,
-                mapTextFieldStates = mapStates
-            )
+
+    // recursive traversal of the component and its child components to get all the TextFieldComponent.id
+    private fun extractTextFieldIds(component: Component): List<String> {
+        val ids = mutableListOf<String>()
+
+        fun traverse(comp: Component) {
+            when (comp) {
+                is TextFieldComponent -> {
+                    ids.add(comp.id)
+                }
+
+                is ColumnComponent -> {
+                    comp.children.forEach {
+                        traverse(it)
+                    }
+                }
+
+                is RowComponent -> {
+                    comp.children.forEach {
+                        traverse(it)
+                    }
+                }
+
+                else -> {
+                    // do nothing, because only Row and Column can have
+                    // child components inside themselves
+                }
+            }
+        }
+        
+        traverse(component)
+        return ids
+    }
+
+
+    fun updateTextField(textFieldId: String, value: String) {
+        _stateFlowMapTextFieldStates.update { oldMap ->
+            oldMap.toMutableMap().apply {
+                put(textFieldId, value)
+            }
         }
     }
 
@@ -115,7 +168,6 @@ sealed class CreateNoteBdUiScreenState {
 
     data class Success(
         val component: Component,
-        val mapTextFieldStates: MutableMap<String, String>
     ) : CreateNoteBdUiScreenState()
 }
 

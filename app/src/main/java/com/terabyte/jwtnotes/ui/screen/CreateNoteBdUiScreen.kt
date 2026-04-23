@@ -31,6 +31,7 @@ fun CreateNoteBdUiScreen(
     onNoteCreated: () -> Unit
 ) {
     val state by viewModel.stateFlowScreenState.collectAsStateWithLifecycle()
+    val mapTextFieldStates by viewModel.stateFlowMapTextFieldStates.collectAsStateWithLifecycle()
 
     when (state) {
         is CreateNoteBdUiScreenState.Loading -> {
@@ -52,10 +53,13 @@ fun CreateNoteBdUiScreen(
         }
 
         is CreateNoteBdUiScreenState.Success -> {
+            val component = (state as CreateNoteBdUiScreenState.Success).component
+            viewModel.syncTextFieldsWithComponent(component)
+
             ScreenStateSuccess(
-                (state as CreateNoteBdUiScreenState.Success).component,
-                (state as CreateNoteBdUiScreenState.Success).mapTextFieldStates,
-                viewModel::onTextFieldValueChange
+                component = (state as CreateNoteBdUiScreenState.Success).component,
+                mapTextFieldStates = mapTextFieldStates,
+                onTextFieldValueChange = viewModel::updateTextField
             )
         }
     }
@@ -102,7 +106,7 @@ private fun ScreenStateErrorNoInternet(onTryAgain: () -> Unit) {
 @Composable
 private fun ScreenStateSuccess(
     component: Component,
-    mapTextFieldStates: MutableMap<String, String>,
+    mapTextFieldStates: Map<String, String>,
     onTextFieldValueChange: (String, String) -> Unit,
 ) {
     BdUiRenderer(
