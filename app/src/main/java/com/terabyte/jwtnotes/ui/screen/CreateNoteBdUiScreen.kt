@@ -107,6 +107,7 @@ private fun ScreenStateSuccess(
 ) {
     BdUiRenderer(
         component = component,
+        modifier = Modifier,
         mapTextFieldStates = mapTextFieldStates,
         onTextFieldValueChange = onTextFieldValueChange,
     ) { }

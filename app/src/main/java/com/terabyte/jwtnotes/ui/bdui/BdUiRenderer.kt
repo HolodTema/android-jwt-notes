@@ -43,6 +43,7 @@ import androidx.compose.ui.text.TextStyle as ComposeTextStyle
 @Composable
 fun BdUiRenderer(
     component: Component,
+    modifier: Modifier,
     mapTextFieldStates: Map<String, String>,
     onTextFieldValueChange: (String, String) -> Unit,
     onAction: (Action) -> Unit
@@ -51,6 +52,7 @@ fun BdUiRenderer(
         is ColumnComponent -> {
             RenderColumn(
                 columnComponent = component,
+                modifier = modifier,
                 mapTextFieldStates = mapTextFieldStates,
                 onTextFieldValueChange = onTextFieldValueChange,
                 onAction = onAction
@@ -60,6 +62,7 @@ fun BdUiRenderer(
         is RowComponent -> {
             RenderRow(
                 rowComponent = component,
+                modifier = modifier,
                 mapTextFieldStates = mapTextFieldStates,
                 onTextFieldValueChange = onTextFieldValueChange,
                 onAction = onAction
@@ -68,13 +71,15 @@ fun BdUiRenderer(
 
         is TextComponent -> {
             RenderText(
-                textComponent = component
+                textComponent = component,
+                modifier = modifier,
             )
         }
 
         is ButtonComponent -> {
             RenderButton(
                 buttonComponent = component,
+                modifier = modifier,
                 onAction = onAction
             )
         }
@@ -82,6 +87,7 @@ fun BdUiRenderer(
         is TextFieldComponent -> {
             RenderTextField(
                 textFieldComponent = component,
+                modifier = modifier,
                 mapTextFieldStates = mapTextFieldStates,
                 onValueChange = onTextFieldValueChange
             )
@@ -288,25 +294,37 @@ private fun VerticalArrangement.toComposeArrangement(): Arrangement.Vertical {
 @Composable
 private fun RenderColumn(
     columnComponent: ColumnComponent,
+    modifier: Modifier,
     mapTextFieldStates: Map<String, String>,
     onTextFieldValueChange: (String, String) -> Unit,
     onAction: (Action) -> Unit,
 ) {
     val backgroundColor = columnComponent.backgroundColorHex.toComposeColor()
 
+    val combinedModifier = modifier
+        .margin(columnComponent.margin)
+        .convertSizeSpecToWidth(columnComponent.width)
+        .convertSizeSpecToHeight(columnComponent.height)
+        .background(backgroundColor)
+        .padding(columnComponent.padding)
+
     Column(
         horizontalAlignment = columnComponent.horizontalAlignment.toComposeAlignment(),
         verticalArrangement = columnComponent.verticalArrangement.toComposeArrangement(),
-        modifier = Modifier
-            .margin(columnComponent.margin)
-            .convertSizeSpecToWidth(columnComponent.width)
-            .convertSizeSpecToHeight(columnComponent.height)
-            .background(backgroundColor)
-            .padding(columnComponent.padding)
+        modifier = combinedModifier
     ) {
         columnComponent.children.forEach { child ->
+            val childHeight = child.height
+            val childModifier = if (childHeight is SizeSpec.Weight) {
+                Modifier
+                    .weight(childHeight.weight)
+            } else {
+                Modifier
+            }
+
             BdUiRenderer(
                 component = child,
+                modifier = childModifier,
                 mapTextFieldStates = mapTextFieldStates,
                 onTextFieldValueChange = onTextFieldValueChange,
                 onAction = onAction
@@ -319,25 +337,39 @@ private fun RenderColumn(
 @Composable
 private fun RenderRow(
     rowComponent: RowComponent,
+    modifier: Modifier,
     mapTextFieldStates: Map<String, String>,
     onTextFieldValueChange: (String, String) -> Unit,
     onAction: (Action) -> Unit,
 ) {
     val backgroundColor = rowComponent.backgroundColorHex.toComposeColor()
 
+    val combinedModifier = modifier
+        .margin(rowComponent.margin)
+        .convertSizeSpecToWidth(rowComponent.width)
+        .convertSizeSpecToHeight(rowComponent.height)
+        .background(backgroundColor)
+        .padding(rowComponent.padding)
+
     Row(
         verticalAlignment = rowComponent.verticalAlignment.toComposeAlignment(),
         horizontalArrangement = rowComponent.horizontalArrangement.toComposeArrangement(),
-        modifier = Modifier
-            .margin(rowComponent.margin)
-            .convertSizeSpecToWidth(rowComponent.width)
-            .convertSizeSpecToHeight(rowComponent.height)
-            .background(backgroundColor)
-            .padding(rowComponent.padding)
+        modifier = combinedModifier
     ) {
         rowComponent.children.forEach { child ->
+            val childWidth = child.width
+
+            val childModifier = if (childWidth is SizeSpec.Weight) {
+                Modifier
+                    .weight(childWidth.weight)
+            }
+            else {
+                Modifier
+            }
+
             BdUiRenderer(
                 component = child,
+                modifier = childModifier,
                 mapTextFieldStates = mapTextFieldStates,
                 onTextFieldValueChange = onTextFieldValueChange,
                 onAction = onAction
@@ -348,11 +380,14 @@ private fun RenderRow(
 
 
 @Composable
-private fun RenderText(textComponent: TextComponent) {
+private fun RenderText(
+    textComponent: TextComponent,
+    modifier: Modifier,
+) {
     Text(
         text = textComponent.text,
         style = textComponent.style.toComposeTextStyle(),
-        modifier = Modifier
+        modifier = modifier
             .margin(textComponent.margin)
             .convertSizeSpecToWidth(textComponent.width)
             .convertSizeSpecToHeight(textComponent.height)
@@ -365,6 +400,7 @@ private fun RenderText(textComponent: TextComponent) {
 @Composable
 private fun RenderButton(
     buttonComponent: ButtonComponent,
+    modifier: Modifier,
     onAction: (Action) -> Unit
 ) {
     val backgroundColor = buttonComponent.backgroundColorHex.toComposeColor()
@@ -378,7 +414,7 @@ private fun RenderButton(
             containerColor = backgroundColor,
             contentColor = textColor
         ),
-        modifier = Modifier
+        modifier = modifier
             .margin(buttonComponent.margin)
             .convertSizeSpecToWidth(buttonComponent.width)
             .convertSizeSpecToHeight(buttonComponent.height)
@@ -395,6 +431,7 @@ private fun RenderButton(
 @Composable
 fun RenderTextField(
     textFieldComponent: TextFieldComponent,
+    modifier: Modifier,
     mapTextFieldStates: Map<String, String>,
     onValueChange: (String, String) -> Unit,
 ) {
@@ -413,7 +450,7 @@ fun RenderTextField(
         },
         singleLine = textFieldComponent.singleLine,
         textStyle = composeTextStyle,
-        modifier = Modifier
+        modifier = modifier
             .margin(textFieldComponent.margin)
             .convertSizeSpecToWidth(textFieldComponent.width)
             .convertSizeSpecToHeight(textFieldComponent.height)
